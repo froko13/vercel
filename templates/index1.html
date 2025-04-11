@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Сайт про инвестиции</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <!-- ШАПКА -->
+  <header class="header">
+    <div class="nav">
+      <a id="tab-main" href="{{url_for('main.home')}}">Главная</a>
+      <a id="tab-news" href="{{url_for('main.news')}}">Новости</a>
+      <a id="tab-courses" href="{{url_for('main.courses')}}">Курсы</a>
+      <a id="tab-stocks" href="{{url_for('main.stocks')}}">Акции</a>
+    </div>
+    <div class="auth-buttons">
+        <a class="btn" id="loginButton" href="{{url_for('main.login')}}">Войти</a>
+        <a class="btn" id="registerButton" href="{{url_for('main.register')}}">Регистрация</a>
+        <button class="btn" id="logoutButton" style="display: none;" onclick="logout()">Выход</button>
+        <span id="welcomeMessage" style="color: #66aaff; font-weight: bold; display: none;"></span>
+    </div>
+  </header>
+
+    <!-- Уведомление -->
+    <div id="notification" class="notification hide"></div>   
+  <!-- МОДАЛЬНОЕ ОКНО ДЛЯ РЕГИСТРАЦИИ / ЛОГИНА -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="modal" id="authModal">
+      <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+      <h2 id="authModalTitle">Войти</h2>
+      <form onsubmit="event.preventDefault(); submitAuthForm();">
+        <div id="registerFields" style="display: none;">
+          <label for="regName">Имя:</label>
+          <input type="text" id="regName" />
+        </div>
+        <label for="authLogin">Логин:</label>
+        <input type="text" id="authLogin" required />
+
+        <label for="authPassword">Пароль:</label>
+        <input type="password" id="authPassword" required />
+
+        <button class="btn" type="submit">Отправить</button>
+      </form>
+    </div>
+  </div>
+  {% block content %}
+    
+  {% endblock %}
+</body>
+</html>

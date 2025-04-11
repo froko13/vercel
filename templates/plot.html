@@ -1,0 +1,109 @@
+{% extends "index1.html" %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График акций</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding-top: 50px;
+        }
+        canvas {
+            background-color: #111;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>График акций AAPL</h1>
+    <canvas id="stockChart"></canvas>
+</div>
+
+<script>
+    async function fetchStockData(ticker) {
+        const response = await fetch(`/api/stock/${ticker}`);
+        const data = await response.json();
+        return data; // Возвращаем данные о датах и ценах
+    }
+
+    async function createChart() {
+        const stockData = await fetchStockData('AAPL'); // Замените на нужный тикер
+        
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Цена акций AAPL',
+                    data: [],
+                    borderColor: 'rgba(102, 170, 255, 1)',
+                    backgroundColor: 'rgba(102, 170, 255, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Дата'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Цена (USD)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Постепенная отрисовка данных
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < stockData.dates.length) {
+                chart.data.labels.push(stockData.dates[index]);
+                chart.data.datasets[0].data.push(stockData.prices[index]);
+                chart.update();
+                index++;
+                $.ajax({
+                    type: "POST",
+                    url: "{{url_for('main.get_post_json')}}",
+                    contentType: 'application/json',
+                    data: JSON.stringify({index}),
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            } else {
+                clearInterval(interval);
+            }
+        }, 300); // Интервал в миллисекундах между добавлением точек
+    }
+
+    createChart();
+</script>
+
+</body>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "index1.html" %}
+
+{% block content %}
+<nav class="sub-nav" id="stocksSubNav">
+    <div class="sub-nav-container">
+        <a id="subTab-chart"     onclick="showSubTab('chart')">График</a>
+        <a id="subTab-portfolio" onclick="showSubTab('portfolio')">Портфель</a>
+        <a id="subTab-stocks"    onclick="showSubTab('stocks')">Акции</a>
+        <a id="subTab-history"   onclick="showSubTab('history')">История</a>
+    </div>
+</nav>
+<boby>
+    <section id="stocks-page" class="content">
+        <h2>Раздел &laquo;Акции&raquo;</h2>
+        <p>
+          Здесь вы можете увидеть график стоимости акций в реальном времени,
+          управлять своим портфелем и просматривать историю торгов.
+        </p>
+    
+        <!-- Кнопки Продать / Купить (вызов мини-формы) -->
+        <div class="stocks-actions">
+          <button class="btn" onclick="toggleTradeForm('buy')">Купить акции</button>
+          <button class="btn" onclick="toggleTradeForm('sell')">Продать акции</button>
+        </div>
+    
+        <!-- Форма покупки/продажи -->
+        <div class="trade-form" id="tradeForm">
+          <h4 id="tradeFormTitle">Купить акции</h4>
+          <label class="trade-form-label" for="stockSelect">Выберите акцию:</label>
+          <select id="stockSelect" class="trade-form-input">
+            <option value="SBER">Сбербанк (SBER)</option>
+            <option value="AAPL">Apple (AAPL)</option>
+            <option value="GOOGL">Google (GOOGL)</option>
+            <option value="TSLA">Tesla (TSLA)</option>
+            <option value="AMZN">Amazon (AMZN)</option>
+          </select>
+    
+          <label class="trade-form-label" for="stockQuantity">Количество:</label>
+          <input type="number" id="stockQuantity" class="trade-form-input" min="1" value="1" />
+    
+          <button class="btn" onclick="executeTrade()">Подтвердить</button>
+          <button class="btn" onclick="toggleTradeForm()">Отмена</button>
+        </div>
+    
+        <!-- Подвкладки: График, Портфель, Акции, История -->
+        <div id="chart" class="sub-content">
+          <div class="chart-container">
+            <h3>График </h3>
+            <canvas id="stockChart" width="600" height="300"></canvas>
+          </div>
+        </div>
+        
+        <div id="portfolio" class="sub-content">
+          <h3>Ваш портфель</h3>
+          <div id="portfolioList" class="portfolio-list">
+    </div>
+        </div>
+        
+        <div id="stocks" class="sub-content">
+          <h3>Все доступные акции</h3>
+          <div class="stock-list">
+            <div class="stock-item">
+              <span>Сбербанк (SBER)</span>
+              <span>&asymp; 250 &#8381;</span>
+            </div>
+            <div class="stock-item">
+              <span>Apple (AAPL)</span>
+              <span>$150</span>
+            </div>
+            <div class="stock-item">
+              <span>Google (GOOGL)</span>
+              <span>$2700</span>
+            </div>
+            <div class="stock-item">
+              <span>Tesla (TSLA)</span>
+              <span>$700</span>
+            </div>
+            <div class="stock-item">
+              <span>Amazon (AMZN)</span>
+              <span>$3300</span>
+            </div>
+          </div>
+        </div>
+    
+        <div id="history" class="sub-content">
+          <h3>История торгов</h3>
+          <div id="historyList" class="history-list">
+          </div>
+        </div>
+      </section>
+</boby>
+{% endblock %}

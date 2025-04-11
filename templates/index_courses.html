@@ -1,0 +1,34 @@
+{% extends "index1.html" %}
+
+{% block content %}
+<body>
+    <section id="courses-page" class="content">
+        <h2>Курсы по инвестициям</h2>
+        <div class="courses-list" id="coursesList">
+          <div class="course-card" onclick="openCourseDetails('course1')">
+            <img src="https://avatars.mds.yandex.net/i?id=72b06d7444dc038dbf8ef7928bbe31c3_l-7550039-images-thumbs&n=13" alt="Курс 1">
+            <h3>Основы инвестирования</h3>
+            <p>С чего начать свой путь в мире инвестиций.</p>
+          </div>
+          <div class="course-card" onclick="openCourseDetails('course2')">
+            <img src="https://i.pinimg.com/originals/b7/3f/06/b73f062653200b99470650225deaf702.jpg" alt="Курс 2">
+            <h3>Инвестиционные стратегии</h3>
+            <p>Подробный разбор стратегий и их применение.</p>
+          </div>
+          <div class="course-card" onclick="openCourseDetails('course3')">
+            <img src="https://i.pinimg.com/736x/6e/87/6a/6e876a3e48bdb745ba49906da1f65ecd.jpg" alt="Курс 3">
+            <h3>Продвинутый анализ рынка</h3>
+            <p>Технический и фундаментальный анализ.</p>
+          </div>
+        </div>
+        <div class="course-details" id="courseDetails" style="display:none;">
+          <h3 id="courseTitle"></h3>
+          <img id="courseImage" src="" alt="Изображение курса">
+          <p id="courseDescription"></p>
+          <h4>Вопросы для самопроверки:</h4>
+          <ul id="courseQuestions"></ul>
+          <button class="btn" onclick="closeCourseDetails()">Закрыть</button>
+        </div>
+      </section>    
+</body>
+{% endblock %}
