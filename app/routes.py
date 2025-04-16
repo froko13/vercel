@@ -75,12 +75,10 @@ def news():
     return render_template('index_new.html')
 
 @bp.route('/courses')
-@login_required
 def courses():
     return render_template('index_courses.html')
 
 @bp.route('/stocks')
-@login_required
 def stocks():
     return render_template('index_stock.html')
 
