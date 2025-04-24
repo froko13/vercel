@@ -94,7 +94,7 @@
 
         // Закрываем попап и перенаправляем на главную страницу при нажатии на кнопку закрытия
         closePopup.onclick = function() {
-            window.history.back();
+            window.location.href = "{{ url_for('main.home') }}";
         }
     </script>
 
