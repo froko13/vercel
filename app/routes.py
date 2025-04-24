@@ -102,7 +102,7 @@ def stock_data(ticker):
     
     return jsonify(response_data)
 
-@bp.route('/get_post_json', methods=["GET", "POST"])
+@bp.route('/get_post_json', methods=["POST"])
 def get_post_json():    
     data = request.get_json()
 
