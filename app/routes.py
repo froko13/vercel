@@ -26,6 +26,11 @@ close_prices = data['Close']
 def home():
     return render_template('index_home.html')
 
+@bp.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.home'))
+
 @bp.route("/register", methods=["GET", "POST"])
 def register():
 

@@ -147,6 +147,23 @@
             font-weight: bold;
             text-align: center;
         }
+        .stocks-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        .stocks-label {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        .stocks-amount {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #66aaff;
+        }
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -198,6 +215,11 @@
             <div class="balance-label">Ваш баланс</div>
             <div class="balance-amount" id="balanceDisplay">$0.00</div>
         </div>
+
+        <div class="stocks-container">
+            <div class="stocks-label">Ваши акции AAPL</div>
+            <div class="stocks-amount" id="stocksDisplay">0</div>
+        </div>
     </div>
 </div>
 
@@ -225,6 +247,7 @@
             if (data.status === "success") {
                 data_us = data;
                 document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+                document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL || 0;
                 console.log('Профиль загружен:', data_us);
             } else {
                 throw new Error('Ошибка в данных');
@@ -349,7 +372,6 @@
 
     async function updateProfile() {
         try {
-            // Важно: преобразуем profile в JSON строку, если сервер ожидает строку
             const profileData = JSON.stringify(data_us.profile);
             
             const response = await fetch('/api/profile', {
@@ -360,8 +382,8 @@
                 credentials: 'include',
                 body: JSON.stringify({
                     balance: data_us.balance,
-                    profile: profileData, // Отправляем весь профиль как строку
-                    AAPL: data_us.profile.AAPL // И отдельно AAPL для совместимости
+                    profile: profileData,
+                    AAPL: data_us.profile.AAPL
                 })
             });
 
@@ -369,7 +391,6 @@
             
             if (result.status === "success") {
                 console.log("Данные обновлены на сервере:", result);
-                // Обновляем локальные данные с сервера
                 if (result.balance) data_us.balance = result.balance;
                 if (result.profile) data_us.profile = typeof result.profile === 'string' 
                     ? JSON.parse(result.profile) 
@@ -397,6 +418,7 @@
         data_us.balance -= totalCost;
         data_us.profile.AAPL += quantity;
         document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
         
         const success = await updateProfile();
         if (success) {
@@ -405,6 +427,7 @@
             data_us.balance += totalCost;
             data_us.profile.AAPL -= quantity;
             document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+            document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
         }
     });
 
@@ -420,6 +443,7 @@
         data_us.balance += totalValue;
         data_us.profile.AAPL -= quantity;
         document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
         
         const success = await updateProfile();
         if (success) {
@@ -428,6 +452,7 @@
             data_us.balance -= totalValue;
             data_us.profile.AAPL += quantity;
             document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+            document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
         }
     });
 
