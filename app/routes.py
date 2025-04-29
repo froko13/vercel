@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from app.models import User
 from runner import bp, db
 import yfinance as yf
-
+import json
 
 
 
@@ -85,6 +85,7 @@ def stocks():
     return render_template('index_stock.html')
 
 @bp.route('/plot')
+@login_required
 def plot():
     return render_template('plot.html')
 
@@ -99,11 +100,74 @@ def stock_data(ticker):
         'dates': data.index.strftime('%Y-%m-%d').tolist(),
         'prices': data['Close'].tolist()
     }
-    
     return jsonify(response_data)
 
-@bp.route('/get_post_json', methods=["POST"])
-def get_post_json():    
-    data = request.get_json()
+@bp.route('/api/current_point', methods=['POST'])
+def current_point():
+    data = request.json
+    current_index = data.get('index')
+    current_price = data.get('price')
+    current_date = data.get('date')
+    
+    # Проверяем, что все данные получены
+    if None in [current_index, current_price, current_date]:
+        return jsonify({'error': 'Missing data'}), 400
+    
+    print(f"Received: index={current_index}, price={current_price}, date={current_date}")
+    
+    # Возвращаем полученные данные для проверки
+    return jsonify({
+        'status': 'success',
+        'received': {
+            'index': current_index,
+            'price': current_price,
+            'date': current_date
+        }
+    })
 
-    return jsonify(status="success", data=data)
+@bp.route('/api/profile', methods=['GET'])
+@login_required
+def get_profile():
+    """Получить профиль текущего пользователя"""
+    return jsonify({
+        "status": "success",
+        "profile": current_user.profile,
+        "balance": current_user.balance
+    })
+
+@bp.route('/api/profile', methods=['PUT'])
+@login_required
+def update_profile():
+    try:
+        update_data = request.get_json()
+        
+        if not update_data:
+            return jsonify({"status": "error", "message": "Нет данных"}), 400
+        
+        # Обновляем баланс
+        if 'balance' in update_data:
+            current_user.balance = float(update_data['balance'])
+        
+        # Обновляем профиль (2 варианта на случай разных форматов)
+        if 'profile' in update_data:
+            if isinstance(update_data['profile'], str):
+                current_user.profile = json.loads(update_data['profile'])
+            else:
+                current_user.profile = update_data['profile']
+        elif 'AAPL' in update_data:
+            if not isinstance(current_user.profile, dict):
+                current_user.profile = {}
+            current_user.profile['AAPL'] = int(update_data['AAPL'])
+        
+        db.session.commit()
+        
+        return jsonify({
+            "status": "success",
+            "balance": current_user.balance,
+            "profile": current_user.profile,
+            "AAPL": current_user.profile.get('AAPL', 0)
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500

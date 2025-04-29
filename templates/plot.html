@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>График акций</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -13,37 +14,257 @@
             background-color: #000;
             color: #fff;
             font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
         }
         .container {
-            width: 80%;
-            margin: auto;
-            padding-top: 50px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+        }
+        .chart-container {
+            flex: 1;
+            background-color: #111;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-frame {
+            border: 5px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            flex: 1;
+            position: relative;
+        }
+        .chart-title {
+            border: 5px solid #333;
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            background-color: #222;
+            text-align: center;
+        }
+        .chart-title h1 {
+            font-size: 18px;
+            margin: 0;
+            color: #fff;
+            font-weight: normal;
         }
         canvas {
+            width: 100% !important;
+            height: 100% !important;
             background-color: #111;
+            display: block;
+        }
+        .stock-controls {
+            width: 280px;
+            background-color: #222;
+            padding: 20px;
+            border-left: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+        .price-info {
+            position: relative;
+        }
+        .price-display {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .price-arrow {
+            margin-left: 10px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            transition: all 0.3s;
+        }
+        .price-arrow.up {
+            border-bottom: 12px solid #4CAF50;
+        }
+        .price-arrow.down {
+            border-top: 12px solid #f44336;
+        }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .buy-btn, .sell-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        .buy-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .buy-btn:hover {
+            background-color: #45a049;
+        }
+        .sell-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .sell-btn:hover {
+            background-color: #d32f2f;
+        }
+        .quantity-input {
+            padding: 12px;
+            width: calc(100% - 24px);
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .balance-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        .balance-label {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        .balance-amount {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .chart-container {
+                height: 70%;
+            }
+            .stock-controls {
+                width: 100%;
+                height: 30%;
+                border-left: none;
+                border-top: 1px solid #444;
+            }
+            .chart-title h1 {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>График акций AAPL</h1>
-    <canvas id="stockChart"></canvas>
+    <div class="chart-container">
+        <div class="chart-title">
+            <h1>График акций AAPL</h1>
+        </div>
+        <div class="chart-frame">
+            <canvas id="stockChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="stock-controls">
+        <div class="price-info">
+            <div style="text-align: center; margin-bottom: 5px; font-size: 14px; color: #aaa;">Текущая цена</div>
+            <div class="price-display" id="currentPrice">
+                <span>$0.00</span>
+                <div class="price-arrow" id="priceArrow"></div>
+            </div>
+        </div>
+        
+        <input type="number" class="quantity-input" id="quantity" value="1" min="1" placeholder="Количество">
+        
+        <div class="action-buttons">
+            <button class="buy-btn" id="buyBtn">Купить</button>
+            <button class="sell-btn" id="sellBtn">Продать</button>
+        </div>
+
+        <div class="balance-container">
+            <div class="balance-label">Ваш баланс</div>
+            <div class="balance-amount" id="balanceDisplay">$0.00</div>
+        </div>
+    </div>
 </div>
 
 <script>
+    let data_us = {
+        balance: 0,
+        profile: { AAPL: 0 }
+    };
+
+    let currentPrice = 0;
+    let previousPrice = 0;
+    let chart;
+
+    async function loadProfile() {
+        try {
+            const response = await fetch('/api/profile', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'include'
+            });
+            
+            if (!response.ok) throw new Error('Ошибка сети');
+            
+            const data = await response.json();
+            if (data.status === "success") {
+                data_us = data;
+                document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+                console.log('Профиль загружен:', data_us);
+            } else {
+                throw new Error('Ошибка в данных');
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки профиля:', err);
+        }
+    }
+    
     async function fetchStockData(ticker) {
         const response = await fetch(`/api/stock/${ticker}`);
         const data = await response.json();
-        return data; // Возвращаем данные о датах и ценах
+        return data;
+    }
+
+    function updatePriceArrow() {
+        const arrow = document.getElementById('priceArrow');
+        
+        if (currentPrice > previousPrice) {
+            arrow.className = 'price-arrow up';
+            document.getElementById('currentPrice').firstElementChild.style.color = '#4CAF50';
+        } else if (currentPrice < previousPrice) {
+            arrow.className = 'price-arrow down';
+            document.getElementById('currentPrice').firstElementChild.style.color = '#f44336';
+        }
     }
 
     async function createChart() {
-        const stockData = await fetchStockData('AAPL'); // Замените на нужный тикер
+        const stockData = await fetchStockData('AAPL');
+        
+        if (stockData.prices.length > 0) {
+            previousPrice = stockData.prices[0];
+            currentPrice = stockData.prices[stockData.prices.length - 1];
+            document.getElementById('currentPrice').firstElementChild.textContent = `$${currentPrice.toFixed(2)}`;
+            updatePriceArrow();
+        }
         
         const ctx = document.getElementById('stockChart').getContext('2d');
         
-        const chart = new Chart(ctx, {
+        chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
@@ -54,55 +275,166 @@
                     backgroundColor: 'rgba(102, 170, 255, 0.2)',
                     borderWidth: 2,
                     fill: true,
+                    tension: 0,
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        },
                         title: {
                             display: true,
-                            text: 'Дата'
+                            text: 'Дата',
+                            color: 'rgba(255, 255, 255, 0.7)'
                         }
                     },
                     y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        },
                         title: {
                             display: true,
-                            text: 'Цена (USD)'
+                            text: 'Цена (USD)',
+                            color: 'rgba(255, 255, 255, 0.7)'
                         }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
                     }
                 }
             }
         });
 
-        // Постепенная отрисовка данных
         let index = 0;
         const interval = setInterval(() => {
             if (index < stockData.dates.length) {
                 chart.data.labels.push(stockData.dates[index]);
                 chart.data.datasets[0].data.push(stockData.prices[index]);
+                
+                previousPrice = currentPrice;
+                currentPrice = stockData.prices[index];
+                
+                document.getElementById('currentPrice').firstElementChild.textContent = `$${currentPrice.toFixed(2)}`;
+                updatePriceArrow();
+                
                 chart.update();
+                
                 index++;
-                $.ajax({
-                    type: "POST",
-                    url: "{{url_for('main.get_post_json')}}",
-                    contentType: 'application/json',
-                    data: JSON.stringify({index}),
-                    dataType: 'json',
-                    success: function(response) {
-                        console.log(response);
-                    },
-                    error: function(err) {
-                        console.log(err);
-                    }
-                });
             } else {
                 clearInterval(interval);
             }
-        }, 300); // Интервал в миллисекундах между добавлением точек
+        }, 700);
     }
 
-    createChart();
+    async function updateProfile() {
+        try {
+            // Важно: преобразуем profile в JSON строку, если сервер ожидает строку
+            const profileData = JSON.stringify(data_us.profile);
+            
+            const response = await fetch('/api/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    balance: data_us.balance,
+                    profile: profileData, // Отправляем весь профиль как строку
+                    AAPL: data_us.profile.AAPL // И отдельно AAPL для совместимости
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                console.log("Данные обновлены на сервере:", result);
+                // Обновляем локальные данные с сервера
+                if (result.balance) data_us.balance = result.balance;
+                if (result.profile) data_us.profile = typeof result.profile === 'string' 
+                    ? JSON.parse(result.profile) 
+                    : result.profile;
+                return true;
+            } else {
+                throw new Error(result.message || "Ошибка сервера");
+            }
+        } catch (error) {
+            console.error("Ошибка при обновлении:", error);
+            alert("Не удалось обновить данные. Попробуйте снова.");
+            return false;
+        }
+    }
+
+    document.getElementById('buyBtn').addEventListener('click', async function() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const totalCost = quantity * currentPrice;
+        
+        if (totalCost > data_us.balance) {
+            alert("Недостаточно средств!");
+            return;
+        }
+        
+        data_us.balance -= totalCost;
+        data_us.profile.AAPL += quantity;
+        document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        
+        const success = await updateProfile();
+        if (success) {
+            alert(`Куплено ${quantity} акций AAPL! Новый баланс: $${data_us.balance.toFixed(2)}`);
+        } else {
+            data_us.balance += totalCost;
+            data_us.profile.AAPL -= quantity;
+            document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        }
+    });
+
+    document.getElementById('sellBtn').addEventListener('click', async function() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        
+        if (quantity > data_us.profile.AAPL) {
+            alert("У вас нет столько акций!");
+            return;
+        }
+        
+        const totalValue = quantity * currentPrice;
+        data_us.balance += totalValue;
+        data_us.profile.AAPL -= quantity;
+        document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        
+        const success = await updateProfile();
+        if (success) {
+            alert(`Продано ${quantity} акций AAPL! Новый баланс: $${data_us.balance.toFixed(2)}`);
+        } else {
+            data_us.balance -= totalValue;
+            data_us.profile.AAPL += quantity;
+            document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
+        }
+    });
+
+    window.onload = async () => {
+        await loadProfile();
+        createChart();
+    };
 </script>
 
 </body>

@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique = True)
     password = db.Column(db.String(100), nullable=False)
-    balance = db.Column(db.Integer, default=100)
+    balance = db.Column(db.Integer, default=1000)
     user_id = db.Column(db.Integer, nullable=False)
     is_confirmed =  db.Column(db.Boolean, default=True)
     profile = db.Column(db.JSON, default = {
