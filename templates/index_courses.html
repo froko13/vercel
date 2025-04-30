@@ -1,34 +1,245 @@
 {% extends "index1.html" %}
 
 {% block content %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Курсы по инвестициям</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      padding: 20px;
+    }
+    .courses-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .course-card {
+      width: 250px;
+      background-color: #111;
+      padding: 15px;
+      border: 1px solid #333;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border-radius: 5px;
+    }
+    .course-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(102, 170, 255, 0.5);
+    }
+    .course-card img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid #66aaff;
+      border-radius: 3px;
+    }
+    .course-card h3 {
+      color: #66aaff;
+      margin: 10px 0;
+    }
+    .course-card p {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .course-details {
+      background-color: #111;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: none;
+    }
+    .course-details img {
+      max-width: 400px;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin: 10px 0;
+      border: 2px solid #66aaff;
+      border-radius: 3px;
+    }
+    .btn {
+      background-color: #66aaff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-top: 15px;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #5599dd;
+    }
+    ul {
+      padding-left: 20px;
+      line-height: 1.6;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    h2 {
+      color: #66aaff;
+      margin-bottom: 20px;
+    }
+    h3 {
+      margin: 15px 0 10px;
+    }
+    h4 {
+      color: #66aaff;
+      margin: 20px 0 10px;
+    }
+  </style>
+</head>
 <body>
-    <section id="courses-page" class="content">
-        <h2>Курсы по инвестициям</h2>
-        <div class="courses-list" id="coursesList">
-          <div class="course-card" onclick="openCourseDetails('course1')">
-            <img src="https://avatars.mds.yandex.net/i?id=72b06d7444dc038dbf8ef7928bbe31c3_l-7550039-images-thumbs&n=13" alt="Курс 1">
-            <h3>Основы инвестирования</h3>
-            <p>С чего начать свой путь в мире инвестиций.</p>
-          </div>
-          <div class="course-card" onclick="openCourseDetails('course2')">
-            <img src="https://i.pinimg.com/originals/b7/3f/06/b73f062653200b99470650225deaf702.jpg" alt="Курс 2">
-            <h3>Инвестиционные стратегии</h3>
-            <p>Подробный разбор стратегий и их применение.</p>
-          </div>
-          <div class="course-card" onclick="openCourseDetails('course3')">
-            <img src="https://i.pinimg.com/736x/6e/87/6a/6e876a3e48bdb745ba49906da1f65ecd.jpg" alt="Курс 3">
-            <h3>Продвинутый анализ рынка</h3>
-            <p>Технический и фундаментальный анализ.</p>
-          </div>
-        </div>
-        <div class="course-details" id="courseDetails" style="display:none;">
-          <h3 id="courseTitle"></h3>
-          <img id="courseImage" src="" alt="Изображение курса">
-          <p id="courseDescription"></p>
-          <h4>Вопросы для самопроверки:</h4>
-          <ul id="courseQuestions"></ul>
-          <button class="btn" onclick="closeCourseDetails()">Закрыть</button>
-        </div>
-      </section>    
+
+  <!-- КУРСЫ -->
+  <section id="courses-page" class="content">
+    <h2>Курсы по инвестициям</h2>
+    <div class="courses-list" id="coursesList">
+      <div class="course-card" onclick="openCourseDetails('course1')">
+        <img src="https://mosopora.ru/upload/000/u1/8d/37/7a66acd2.jpeg" alt="Основы инвестирования">
+        <h3>Основы инвестирования</h3>
+        <p>Узнайте, что такое инвестиции, и как они могут помочь вам достичь финансовых целей.</p>
+      </div>
+      <div class="course-card" onclick="openCourseDetails('course2')">
+        <img src="https://i.pinimg.com/originals/b7/3f/06/b73f062653200b99470650225deaf702.jpg" alt="Финансовый анализ">
+        <h3>Финансовый анализ</h3>
+        <p>Научитесь оценивать стоимость активов и принимать обоснованные решения.</p>
+      </div>
+      <div class="course-card" onclick="openCourseDetails('course3')">
+        <img src="https://i.pinimg.com/736x/6e/87/6a/6e876a3e48bdb745ba49906da1f65ecd.jpg" alt="Диверсификация портфеля">
+        <h3>Диверсификация портфеля</h3>
+        <p>Поймите, как распределение активов может снизить риски и увеличить доходность.</p>
+      </div>
+      <div class="course-card" onclick="openCourseDetails('course4')">
+        <img src="https://avatars.mds.yandex.net/i?id=ba2e18c13ca67be108ec87149bc2d1b7f32d03c2-5275813-images-thumbs&n=13" alt="Психология инвестирования">
+        <h3>Психология инвестирования</h3>
+        <p>Исследуйте, как эмоции и поведение влияют на инвестиционные решения.</p>
+      </div>
+      <div class="course-card" onclick="openCourseDetails('course5')">
+        <img src="https://i.pinimg.com/originals/e1/ac/99/e1ac997b5816627f9ddd8068eda6bc72.jpg" alt="Стратегии для начинающих">
+        <h3>Стратегии для начинающих</h3>
+        <p>Ознакомьтесь с различными стратегиями инвестирования.</p>
+      </div>
+    </div>
+    <div class="course-details" id="courseDetails">
+      <h3 id="courseTitle"></h3>
+      <img id="courseImage" src="" alt="Изображение курса">
+      <p id="courseDescription"></p>
+      <h4>Программа курса:</h4>
+      <ul id="courseQuestions"></ul>
+      <button class="btn" onclick="closeCourseDetails()">Закрыть</button>
+    </div>
+  </section>
+
+  <script>
+    const coursesData = {
+      course1: {
+        title: "Основы инвестирования",
+        image: "https://mosopora.ru/upload/000/u1/8d/37/7a66acd2.jpeg",
+        description: "Этот курс познакомит вас с базовыми принципами инвестирования и поможет сделать первые шаги в мире финансов. Вы узнаете, как работают различные инвестиционные инструменты и как начать инвестировать с минимальными рисками.",
+        questions: [
+          "Что такое инвестиции и зачем они нужны?",
+          "Основные виды инвестиционных инструментов",
+          "Как оценивать риски и доходность?",
+          "Практические советы для начинающих инвесторов",
+          "Разбор типичных ошибок новичков"
+        ]
+      },
+      course2: {
+        title: "Финансовый анализ компаний",
+        image: "https://i.pinimg.com/originals/b7/3f/06/b73f062653200b99470650225deaf702.jpg",
+        description: "Научитесь анализировать финансовую отчетность компаний и принимать обоснованные инвестиционные решения на основе фундаментального анализа.",
+        questions: [
+          "Чтение и анализ балансового отчета",
+          "Оценка прибыльности компании",
+          "Ключевые финансовые коэффициенты (P/E, P/S, ROE и др.)",
+          "Разбор реальных кейсов компаний",
+          "Как выявлять перспективные компании"
+        ]
+      },
+      course3: {
+        title: "Диверсификация портфеля",
+        image: "https://i.pinimg.com/736x/6e/87/6a/6e876a3e48bdb745ba49906da1f65ecd.jpg",
+        description: "Узнайте, как правильно распределять свои инвестиции между различными активами, секторами и регионами для снижения рисков.",
+        questions: [
+          "Принципы диверсификации инвестиций",
+          "Корреляция между активами",
+          "Как создать сбалансированный портфель",
+          "Ребалансировка портфеля",
+          "Примеры диверсифицированных портфелей"
+        ]
+      },
+      course4: {
+        title: "Психология инвестирования",
+        image: "https://avatars.mds.yandex.net/i?id=ba2e18c13ca67be108ec87149bc2d1b7f32d03c2-5275813-images-thumbs&n=13",
+        description: "Исследуйте, как психологические факторы влияют на принятие инвестиционных решений и как избежать распространенных когнитивных искажений.",
+        questions: [
+          "Эмоции и инвестиционные решения",
+          "Когнитивные искажения в инвестировании",
+          "Как избежать паники и ажиотажа",
+          "Дисциплина в инвестировании",
+          "Кейсы психологических ошибок инвесторов"
+        ]
+      },
+      course5: {
+        title: "Стратегии для начинающих",
+        image: "https://i.pinimg.com/originals/e1/ac/99/e1ac997b5816627f9ddd8068eda6bc72.jpg",
+        description: "Познакомьтесь с проверенными стратегиями инвестирования, которые подходят для начинающих инвесторов с разным уровнем капитала.",
+        questions: [
+          "Стратегия усреднения стоимости",
+          "Инвестирование в индексные фонды",
+          "Дивидендные стратегии",
+          "Долгосрочное инвестирование vs трейдинг",
+          "Как выбрать стратегию под свои цели"
+        ]
+      }
+    };
+
+    function openCourseDetails(courseId) {
+      const course = coursesData[courseId];
+      if (!course) return;
+
+      document.getElementById('coursesList').style.display = 'none';
+      const details = document.getElementById('courseDetails');
+      details.style.display = 'block';
+
+      document.getElementById('courseTitle').textContent = course.title;
+      document.getElementById('courseImage').src = course.image;
+      document.getElementById('courseImage').alt = course.title;
+      document.getElementById('courseDescription').textContent = course.description;
+
+      const questionsUl = document.getElementById('courseQuestions');
+      questionsUl.innerHTML = "";
+      course.questions.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+        questionsUl.appendChild(li);
+      });
+
+      // Прокрутка к деталям курса
+      details.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeCourseDetails() {
+      document.getElementById('courseDetails').style.display = 'none';
+      document.getElementById('coursesList').style.display = 'flex';
+
+      // Прокрутка обратно к списку курсов
+      document.getElementById('coursesList').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
 </body>
 {% endblock %}

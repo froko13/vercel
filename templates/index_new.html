@@ -1,22 +1,86 @@
 {% extends "index1.html" %}
 
 {% block content %}
+<head>
+    <style>
+        /* Стили для кнопки */
+        .my-button {
+            background-color: #66aaff; /* Синий фон */
+            border: none; /* Убираем границу */
+            color: white; /* Белый текст */
+            padding: 15px 32px; /* Внутренние отступы */
+            text-align: center; /* Выравнивание текста по центру */
+            text-decoration: none; /* Убираем подчеркивание */
+            display: inline-block; /* Делаем кнопку блочным элементом */
+            font-size: 16px; /* Размер шрифта */
+            margin: 4px 2px; /* Внешние отступы */
+            cursor: pointer; /* Курсор в виде указателя */
+            border-radius: 8px; /* Закругленные углы */
+            transition: background-color 0.3s ease; /* Плавное изменение цвета */
+            white-space: nowrap; /* Запрет переноса текста на кнопке */
+        }
+
+            /* Стиль при наведении на кнопку */
+            .my-button:hover {
+                background-color: #4276b5; /* Темно-синий фон */
+            }
+
+            /* Стиль при нажатии на кнопку */
+            .my-button:active {
+                background-color: #295c9c; /* Еще более темный синий */
+            }
+
+        /* Стили для контейнера новости */
+        .news-item {
+            display: flex; /* Используем flexbox */
+            align-items: flex-start; /* Выравниваем элементы по верхнему краю */
+            gap: 20px; /* Расстояние между элементами */
+            margin-bottom: 20px; /* Отступ между новостями */
+        }
+
+            /* Стили для изображения */
+            .news-item img {
+                width: 150px; /* Фиксированная ширина изображения */
+                height: auto; /* Сохраняем пропорции */
+                border-radius: 8px; /* Закругленные углы */
+            }
+
+            /* Стили для текста */
+            .news-item p {
+                flex: 1; /* Текст занимает все доступное пространство */
+                margin: 0; /* Убираем отступы у параграфа */
+            }
+    </style>
+</head>
 <body>
 
-  <section id="news-page" class="content">
-    <h2>Новости за прошлый год</h2>
-    <div class="news-item">
-      <img src="https://eee-region.ru/wp-content/uploads/2021/09/4063402-scaled.jpg" alt="Новость 1">
-      <p><strong>30.03.2024</strong> — Крупная компания объявила о выходе на новый рынок. Ожидается значительный рост акций.</p>
-</div>
-    <div class="news-item">
-      <img src="https://avatars.mds.yandex.net/i?id=711b151f6cd41d62bea531983baee3789f27eaec-9181363-images-thumbs&n=13" alt="Новость 2">
-      <p><strong>15.07.2024</strong> — Инвесторы активно скупают акции технологического сектора. Аналитики прогнозируют рост на 20%.</p>
-    </div>
-    <div class="news-item">
-      <img src="https://yandex-images.clstorage.net/5y5S1Dx01/85ab85rgtH_/8GfeVgA-KLXNEoqds4-90PdTaBt2Idmwckk7pOvRSuGjcU0YdENouTLq_lkChOoTj3flur2fHpQy7tbAKwQFbmS3SwSXr-i0iABIDrUMudWkVDjd8rfavfyWJ3lkT9L-Py5TX6CAaKy0Oe5J2Ut6QcdvN2plBgDK8SRbj3bSlbd5L9hbiK8tuE9Hjlh6xLYd5RQkFWligzyz1Cu46YkScvSpnRxtCSHhOOnpTl9AYcXK4DojrU4LCbhjX40-0FR2-OldG4Xtb3lERImUvcU1XebTIN1oZk2--tvkcGEJWriwbpkf7sYlrLQsbskQgGYKRCKwKGdJAg1-rtWKsx1Td_RsWlYO6G38hYiOmLnA9FIgnCqSriqHN3vb5HMhjJh5_GITmiPPa-T2oaeIW0esDE4ifW_nQUBHeW9UiXYd2Ps1p5PcDKmptoMLwFz6ALwb7xkqXeGug7h9Eisy54mTuPrvVdIsyyiguCrrQRNE78pEp_nkJ0CHCD7nWIL13xM_OWEVUUBg6jfBAMkZ_AQxXOHap94oIwU3sRbm8GIFXLr7alUQpYugrz7sJ0XWSK6FyO71Iy2AjYgxaZoJcJGRcLLvGtcI5Kr9w4lBn7LPvtplkuXSa-fM-fGQLDQqxdS3P-ZUX6IDKO-5rOfI2wjpTceoMaBtQEkPfKpTT3Oc0LKwZlJSyKdhNkNKCl02RDWTZJRskmjuwvD7mGmxagYQMHUt0pWsR-Jj-KvqTp9NIgFFIbPn70-IwbNiFQKzm5s7M2YYW4wmLb3ET4_U80W-H-Ebpx3vLYR5tVuiMONB0j0_r9mYIceioPyragzVRqjEAquzK2GHzwoxJBUPMVMU_3MhU1yNKSs5gIDKnPnMvt3l0epdJG-Af3cX7Drhgp73-6pb2OFLJSWzJuEKnURvhsIhOevoQQEBM6ddx3sb23_zbt_bxq6jPYMIjlm-D_-bZxTq26DgBvE102a6IA" alt="Новость 3">
-      <p><strong>01.12.2024</strong> — Изменения в законодательстве повлияли на фондовый рынок. Инвесторы ищут новые инструменты для сохранения капитала.</p>
-    </div>
-  </section>
-</boby>
+    <section id="news-page" class="content">
+        <h2>Новости за прошлый год</h2>
+        <div class="news-item">
+            <img src="https://eee-region.ru/wp-content/uploads/2021/09/4063402-scaled.jpg" alt="Новость 1">
+            <p><strong>30.03.2024</strong> — Крупная компания объявила о выходе на новый рынок. Ожидается значительный рост акций.</p>
+            <a href="{{url_for('main.news1')}}" class="my-button">Подробнее</a>
+        </div>
+        <div class="news-item">
+            <img src="https://avatars.mds.yandex.net/i?id=711b151f6cd41d62bea531983baee3789f27eaec-9181363-images-thumbs&n=13" alt="Новость 2">
+            <p><strong>15.07.2024</strong> — Инвесторы активно скупают акции технологического сектора. Аналитики прогнозируют рост на 20%.</p>
+            <a href="{{url_for('main.news1')}}" class="my-button">Подробнее</a>
+        </div>
+        <div class="news-item">
+            <img src="https://yandex-images.clstorage.net/5y5S1Dx01/85ab85rgtH_/8GfeVgA-KLXNEoqds4-90PdTaBt2Idmwckk7pOvRSuGjcU0YdENouTLq_lkChOoTj3flur2fHpQy7tbAKwQFbmS3SwSXr-i0iABIDrUMudWkVDjd8rfavfyWJ3lkT9L-Py5TX6CAaKy0Oe5J2Ut6QcdvN2plBgDK8SRbj3bSlbd5L9hbiK8tuE9Hjlh6xLYd5RQkFWligzyz1Cu46YkScvSpnRxtCSHhOOnpTl9AYcXK4DojrU4LCbhjX40-0FR2-OldG4Xtb3lERImUvcU1XebTIN1oZk2--tvkcGEJWriwbpkf7sYlrLQsbskQgGYKRCKwKGdJAg1-rtWKsx1Td_RsWlYO6G38hYiOmLnA9FIgnCqSriqHN3vb5HMhjJh5_GITmiPPa-T2oaeIW0esDE4ifW_nQUBHeW9UiXYd2Ps1p5PcDKmptoMLwFz6ALwb7xkqXeGug7h9Eisy54mTuPrvVdIsyyiguCrrQRNE78pEp_nkJ0CHCD7nWIL13xM_OWEVUUBg6jfBAMkZ_AQxXOHap94oIwU3sRbm8GIFXLr7alUQpYugrz7sJ0XWSK6FyO71Iy2AjYgxaZoJcJGRcLLvGtcI5Kr9w4lBn7LPvtplkuXSa-fM-fGQLDQqxdS3P-ZUX6IDKO-5rOfI2wjpTceoMaBtQEkPfKpTT3Oc0LKwZlJSyKdhNkNKCl02RDWTZJRskmjuwvD7mGmxagYQMHUt0pWsR-Jj-KvqTp9NIgFFIbPn70-IwbNiFQKzm5s7M2YYW4wmLb3ET4_U80W-H-Ebpx3vLYR5tVuiMONB0j0_r9mYIceioPyragzVRqjEAquzK2GHzwoxJBUPMVMU_3MhU1yNKSs5gIDKnPnMvt3l0epdJG-Af3cX7Drhgp73-6pb2OFLJSWzJuEKnURvhsIhOevoQQEBM6ddx3sb23_zbt_bxq6jPYMIjlm-D_-bZxTq26DgBvE102a6IA" alt="Новость 3">
+            <p><strong>01.12.2024</strong> — Изменения в законодательстве повлияли на фондовый рынок. Инвесторы ищут новые инструменты для сохранения капитала.</p>
+            <a href="{{url_for('main.news1')}}" class="my-button">Подробнее</a>
+        </div>
+        <div class="news-item">
+            <img src="https://yandex-images.clstorage.net/5y5S1Dx01/85ab85rgtH_/8GfeVgA-KLXNEoqds4-90PdTaBt2Idmwckk7pOvRSuGjcU0YdENouTLq_lkChOoTj3flur2fHpQy7tbAKwQFbmS3SwSXr-i0iABIDrUMudWkVDjd8rfavfyWJ3lkT9L-Py5TX6CAaKy0Oe5J2Ut6QcdvN2plBgDK8SRbj3bSlbd5L9hbiK8tuE9Hjlh6xLYd5RQkFWligzyz1Cu46YkScvSpnRxtCSHhOOnpTl9AYcXK4DojrU4LCbhjX40-0FR2-OldG4Xtb3lERImUvcU1XebTIN1oZk2--tvkcGEJWriwbpkf7sYlrLQsbskQgGYKRCKwKGdJAg1-rtWKsx1Td_RsWlYO6G38hYiOmLnA9FIgnCqSriqHN3vb5HMhjJh5_GITmiPPa-T2oaeIW0esDE4ifW_nQUBHeW9UiXYd2Ps1p5PcDKmptoMLwFz6ALwb7xkqXeGug7h9Eisy54mTuPrvVdIsyyiguCrrQRNE78pEp_nkJ0CHCD7nWIL13xM_OWEVUUBg6jfBAMkZ_AQxXOHap94oIwU3sRbm8GIFXLr7alUQpYugrz7sJ0XWSK6FyO71Iy2AjYgxaZoJcJGRcLLvGtcI5Kr9w4lBn7LPvtplkuXSa-fM-fGQLDQqxdS3P-ZUX6IDKO-5rOfI2wjpTceoMaBtQEkPfKpTT3Oc0LKwZlJSyKdhNkNKCl02RDWTZJRskmjuwvD7mGmxagYQMHUt0pWsR-Jj-KvqTp9NIgFFIbPn70-IwbNiFQKzm5s7M2YYW4wmLb3ET4_U80W-H-Ebpx3vLYR5tVuiMONB0j0_r9mYIceioPyragzVRqjEAquzK2GHzwoxJBUPMVMU_3MhU1yNKSs5gIDKnPnMvt3l0epdJG-Af3cX7Drhgp73-6pb2OFLJSWzJuEKnURvhsIhOevoQQEBM6ddx3sb23_zbt_bxq6jPYMIjlm-D_-bZxTq26DgBvE102a6IA" alt="Новость 3">
+            <p><strong>01.12.2024</strong> — Изменения в законодательстве повлияли на фондовый рынок. Инвесторы ищут новые инструменты для сохранения капитала.</p>
+            <a href="{{url_for('main.news1')}}" class="my-button">Подробнее</a>
+        </div>
+        <div class="news-item">
+            <img src="https://yandex-images.clstorage.net/5y5S1Dx01/85ab85rgtH_/8GfeVgA-KLXNEoqds4-90PdTaBt2Idmwckk7pOvRSuGjcU0YdENouTLq_lkChOoTj3flur2fHpQy7tbAKwQFbmS3SwSXr-i0iABIDrUMudWkVDjd8rfavfyWJ3lkT9L-Py5TX6CAaKy0Oe5J2Ut6QcdvN2plBgDK8SRbj3bSlbd5L9hbiK8tuE9Hjlh6xLYd5RQkFWligzyz1Cu46YkScvSpnRxtCSHhOOnpTl9AYcXK4DojrU4LCbhjX40-0FR2-OldG4Xtb3lERImUvcU1XebTIN1oZk2--tvkcGEJWriwbpkf7sYlrLQsbskQgGYKRCKwKGdJAg1-rtWKsx1Td_RsWlYO6G38hYiOmLnA9FIgnCqSriqHN3vb5HMhjJh5_GITmiPPa-T2oaeIW0esDE4ifW_nQUBHeW9UiXYd2Ps1p5PcDKmptoMLwFz6ALwb7xkqXeGug7h9Eisy54mTuPrvVdIsyyiguCrrQRNE78pEp_nkJ0CHCD7nWIL13xM_OWEVUUBg6jfBAMkZ_AQxXOHap94oIwU3sRbm8GIFXLr7alUQpYugrz7sJ0XWSK6FyO71Iy2AjYgxaZoJcJGRcLLvGtcI5Kr9w4lBn7LPvtplkuXSa-fM-fGQLDQqxdS3P-ZUX6IDKO-5rOfI2wjpTceoMaBtQEkPfKpTT3Oc0LKwZlJSyKdhNkNKCl02RDWTZJRskmjuwvD7mGmxagYQMHUt0pWsR-Jj-KvqTp9NIgFFIbPn70-IwbNiFQKzm5s7M2YYW4wmLb3ET4_U80W-H-Ebpx3vLYR5tVuiMONB0j0_r9mYIceioPyragzVRqjEAquzK2GHzwoxJBUPMVMU_3MhU1yNKSs5gIDKnPnMvt3l0epdJG-Af3cX7Drhgp73-6pb2OFLJSWzJuEKnURvhsIhOevoQQEBM6ddx3sb23_zbt_bxq6jPYMIjlm-D_-bZxTq26DgBvE102a6IA" alt="Новость 3">
+            <p><strong>01.12.2024</strong> — Изменения в законодательстве повлияли на фондовый рынок. Инвесторы ищут новые инструменты для сохранения капитала.</p>
+            <a href="{{url_for('main.news1')}}" class="my-button">Подробнее</a>
+        </div>
+    </section>
+</body>
 {% endblock %}

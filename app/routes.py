@@ -176,3 +176,7 @@ def update_profile():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@bp.route('/advanced')
+def news1():
+    return render_template('news_podrobniy.html')
