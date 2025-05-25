@@ -1,0 +1,202 @@
+{% extends "index1.html" %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфель акций</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        
+        .portfolio-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .balance-section {
+            background-color: #111;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            text-align: center;
+            font-size: 1.2em;
+            border-radius: 8px;
+        }
+        
+        .portfolio-list {
+            border: 1px solid #333;
+            padding: 10px;
+            background-color: #111;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 5px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+        }
+        
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #333;
+            padding: 10px 5px;
+            align-items: center;
+        }
+        
+        .stock-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stock-symbol {
+            color: #66aaff;
+            font-weight: bold;
+            width: 100px;
+        }
+        
+        .stock-quantity {
+            width: 150px;
+            text-align: right;
+        }
+        
+        .refresh-btn {
+            background-color: #66aaff;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin: 20px 0;
+            font-size: 1em;
+            display: inline-block;
+            letter-spacing: normal;
+        }
+        
+        .refresh-btn:hover {
+            background-color: #5599dd;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .loading {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .error-message {
+            color: #ff6666;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="portfolio-container">
+        <h1>Мой инвестиционный портфель</h1>
+        
+        <div class="balance-section">
+            Текущий баланс: <span id="balanceDisplay">$0.00</span>
+        </div>
+        
+        <button id="refreshBtn" class="refresh-btn">Обновить данные</button>
+        
+        <div class="portfolio-list">
+            <div class="portfolio-header">
+                <div class="stock-symbol">Акция</div>
+                <div class="stock-quantity">Количество</div>
+            </div>
+            
+            <div id="loadingStocks" class="loading">Загрузка данных портфеля...</div>
+            <div id="stocksList"></div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadProfile();
+            });
+        });
+
+        async function loadProfile() {
+            try {
+                // Показываем состояние загрузки
+                document.getElementById('loadingStocks').style.display = 'block';
+                document.getElementById('stocksList').innerHTML = '';
+                document.getElementById('errorMessage').style.display = 'none';
+                
+                const response = await fetch('/api/profile', {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Ошибка сети');
+
+                const data = await response.json();
+                if (data.status === "success") {
+                    // Обновляем баланс
+                    document.getElementById('balanceDisplay').textContent = `$${data.balance.toFixed(2)}`;
+                    
+                    // Обновляем список акций
+                    const stocksList = document.getElementById('stocksList');
+                    stocksList.innerHTML = '';
+                    
+                    // Ищем все свойства профиля, которые могут быть акциями
+                    let hasStocks = false;
+                    
+                    for (const [symbol, quantity] of Object.entries(data.profile)) {
+                        if (symbol === symbol.toUpperCase() && typeof quantity === 'number' && quantity > 0) {
+                            hasStocks = true;
+                            
+                            const stockItem = document.createElement('div');
+                            stockItem.className = 'stock-item';
+                            stockItem.innerHTML = `
+                                <div class="stock-symbol">${symbol}</div>
+                                <div class="stock-quantity">${quantity} шт.</div>
+                            `;
+                            stocksList.appendChild(stockItem);
+                        }
+                    }
+                    
+                    document.getElementById('loadingStocks').style.display = 'none';
+                    
+                    if (!hasStocks) {
+                        stocksList.innerHTML = '<div class="stock-item" style="justify-content: center;">У вас пока нет акций</div>';
+                    }
+                    
+                    console.log('Профиль загружен:', data);
+                } else {
+                    throw new Error('Ошибка в данных');
+                }
+            } catch (err) {
+                console.error('Ошибка загрузки профиля:', err);
+                document.getElementById('loadingStocks').style.display = 'none';
+                document.getElementById('errorMessage').textContent = 'Не удалось загрузить данные портфеля. Пожалуйста, попробуйте позже.';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+{% endblock %}

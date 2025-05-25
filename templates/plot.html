@@ -46,12 +46,23 @@
             margin-bottom: 20px;
             background-color: #222;
             text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .chart-title h1 {
             font-size: 18px;
             margin: 0;
             color: #fff;
             font-weight: normal;
+        }
+        .stock-selector {
+            background-color: #333;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
         }
         canvas {
             width: 100% !important;
@@ -188,7 +199,19 @@
 <div class="container">
     <div class="chart-container">
         <div class="chart-title">
-            <h1>График акций AAPL</h1>
+            <h1>График акций <span id="currentStock">AAPL</span></h1>
+            <select class="stock-selector" id="stockSelector">
+                <option value="AAPL">AAPL</option>
+                <option value="AMZN">AMZN</option>
+                <option value="BRK.B">BRK.B</option>
+                <option value="FB">FB</option>
+                <option value="GOOGL">GOOGL</option>
+                <option value="JPM">JPM</option>
+                <option value="MSFT">MSFT</option>
+                <option value="NFLX">NFLX</option>
+                <option value="NVDA">NVDA</option>
+                <option value="TSLA">TSLA</option>
+            </select>
         </div>
         <div class="chart-frame">
             <canvas id="stockChart"></canvas>
@@ -217,7 +240,7 @@
         </div>
 
         <div class="stocks-container">
-            <div class="stocks-label">Ваши акции AAPL</div>
+            <div class="stocks-label">Ваши акции <span id="currentStockDisplay">AAPL</span></div>
             <div class="stocks-amount" id="stocksDisplay">0</div>
         </div>
     </div>
@@ -226,12 +249,24 @@
 <script>
     let data_us = {
         balance: 0,
-        profile: { AAPL: 0 }
+        profile: { 
+            AAPL: 0,
+            AMZN: 0,
+            "BRK.B": 0,
+            FB: 0,
+            GOOGL: 0,
+            JPM: 0,
+            MSFT: 0,
+            NFLX: 0,
+            NVDA: 0,
+            TSLA: 0
+        }
     };
 
     let currentPrice = 0;
     let previousPrice = 0;
     let chart;
+    let currentStock = 'AAPL';
 
     async function loadProfile() {
         try {
@@ -247,7 +282,7 @@
             if (data.status === "success") {
                 data_us = data;
                 document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-                document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL || 0;
+                updateStocksDisplay();
                 console.log('Профиль загружен:', data_us);
             } else {
                 throw new Error('Ошибка в данных');
@@ -255,6 +290,14 @@
         } catch (err) {
             console.error('Ошибка загрузки профиля:', err);
         }
+    }
+
+    function updateStocksDisplay() {
+        const stocksDisplay = document.getElementById('stocksDisplay');
+        const currentStockDisplay = document.getElementById('currentStockDisplay');
+        
+        currentStockDisplay.textContent = currentStock;
+        stocksDisplay.textContent = data_us.profile[currentStock] || 0;
     }
 
     async function fetchStockData(ticker) {
@@ -265,18 +308,25 @@
 
     function updatePriceArrow() {
         const arrow = document.getElementById('priceArrow');
+        const priceElement = document.getElementById('currentPrice').firstElementChild;
 
         if (currentPrice > previousPrice) {
             arrow.className = 'price-arrow up';
-            document.getElementById('currentPrice').firstElementChild.style.color = '#4CAF50';
+            priceElement.style.color = '#4CAF50';
         } else if (currentPrice < previousPrice) {
             arrow.className = 'price-arrow down';
-            document.getElementById('currentPrice').firstElementChild.style.color = '#f44336';
+            priceElement.style.color = '#f44336';
+        } else {
+            priceElement.style.color = 'white';
         }
     }
 
-    async function createChart() {
-        const stockData = await fetchStockData('AAPL');
+    async function createChart(ticker = 'AAPL') {
+        if (chart) {
+            chart.destroy();
+        }
+        
+        const stockData = await fetchStockData(ticker);
 
         if (stockData.prices.length > 0) {
             previousPrice = stockData.prices[0];
@@ -287,7 +337,7 @@
 
         const ctx = document.getElementById('stockChart').getContext('2d');
 
-        // Создаем начальные данные для первых 5 точек
+        // Создаем начальные данные для первых 15 точек
         const initialPoints = 15;
         const initialLabels = stockData.dates.slice(0, initialPoints);
         const initialData = stockData.prices.slice(0, initialPoints);
@@ -297,7 +347,7 @@
             data: {
                 labels: initialLabels,
                 datasets: [{
-                    label: 'Цена акций AAPL',
+                    label: `Цена акций ${ticker}`,
                     data: initialData,
                     borderColor: 'rgba(102, 170, 255, 1)',
                     backgroundColor: 'rgba(102, 170, 255, 0.2)',
@@ -354,13 +404,13 @@
             }
         });
 
-        // Устанавливаем начальную цену как 5-ю точку
+        // Устанавливаем начальную цену
         previousPrice = initialData[initialPoints - 2] || 0;
         currentPrice = initialData[initialPoints - 1] || 0;
         document.getElementById('currentPrice').firstElementChild.textContent = `$${currentPrice.toFixed(2)}`;
         updatePriceArrow();
 
-        // Начинаем анимацию с 6-й точки
+        // Начинаем анимацию с 16-й точки
         let index = initialPoints;
         const interval = setInterval(() => {
             if (index < stockData.dates.length) {
@@ -394,8 +444,7 @@
                 credentials: 'include',
                 body: JSON.stringify({
                     balance: data_us.balance,
-                    profile: profileData,
-                    AAPL: data_us.profile.AAPL
+                    profile: profileData
                 })
             });
 
@@ -420,7 +469,7 @@
 
     document.getElementById('buyBtn').addEventListener('click', async function() {
         const quantity = parseInt(document.getElementById('quantity').value);
-        const totalCost = quantity * currentPrice;
+        const totalCost = quantity * currentPrice + 0.03 * quantity * currentPrice; 
 
         if (totalCost > data_us.balance) {
             alert("Недостаточно средств!");
@@ -428,44 +477,52 @@
         }
 
         data_us.balance -= totalCost;
-        data_us.profile.AAPL += quantity;
+        data_us.profile[currentStock] = (data_us.profile[currentStock] || 0) + quantity;
         document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-        document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
+        updateStocksDisplay();
 
         const success = await updateProfile();
         if (success) {
-            alert(`Куплено ${quantity} акций AAPL! Новый баланс: $${data_us.balance.toFixed(2)}`);
+            alert(`Куплено ${quantity} акций ${currentStock}, комиссия ${(0.03 * quantity * currentPrice).toFixed(1)}! Новый баланс: $${data_us.balance.toFixed(2)}`);
         } else {
             data_us.balance += totalCost;
-            data_us.profile.AAPL -= quantity;
+            data_us.profile[currentStock] -= quantity;
             document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-            document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
+            updateStocksDisplay();
         }
     });
 
     document.getElementById('sellBtn').addEventListener('click', async function() {
         const quantity = parseInt(document.getElementById('quantity').value);
+        const currentStocks = data_us.profile[currentStock] || 0;
 
-        if (quantity > data_us.profile.AAPL) {
+        if (quantity > currentStocks) {
             alert("У вас нет столько акций!");
             return;
         }
 
-        const totalValue = quantity * currentPrice;
+        const totalValue = quantity * currentPrice + 0.03 * quantity * currentPrice;
         data_us.balance += totalValue;
-        data_us.profile.AAPL -= quantity;
+        data_us.profile[currentStock] = currentStocks - quantity;
         document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-        document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
+        updateStocksDisplay();
 
         const success = await updateProfile();
         if (success) {
-            alert(`Продано ${quantity} акций AAPL! Новый баланс: $${data_us.balance.toFixed(2)}`);
+            alert(`Продано ${quantity} акций ${currentStock}, комиссия ${0.03 * quantity * currentPrice}! Новый баланс: $${data_us.balance.toFixed(2)}`);
         } else {
             data_us.balance -= totalValue;
-            data_us.profile.AAPL += quantity;
+            data_us.profile[currentStock] = currentStocks;
             document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-            document.getElementById('stocksDisplay').textContent = data_us.profile.AAPL;
+            updateStocksDisplay();
         }
+    });
+
+    document.getElementById('stockSelector').addEventListener('change', function() {
+        currentStock = this.value;
+        document.getElementById('currentStock').textContent = currentStock;
+        createChart(currentStock);
+        updateStocksDisplay();
     });
 
     window.onload = async () => {

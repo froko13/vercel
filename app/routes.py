@@ -180,3 +180,8 @@ def update_profile():
 @bp.route('/advanced')
 def news1():
     return render_template('news_podrobniy.html')
+
+@bp.route('/portfile', methods=['GET'])
+@login_required
+def portfile ():
+    return render_template('portfile.html')
