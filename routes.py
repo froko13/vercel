@@ -8,19 +8,44 @@ from app.models import User
 from runner import bp, db
 import yfinance as yf
 import json
+import time
+import math
+import random
 
+# ─── Кэш данных (живёт пока сервер запущен) ───────────────────────
+_stock_cache = {}
+CACHE_TTL = 3600  # 1 час
 
+# ─── Генератор демо-данных если yfinance недоступен ───────────────
+def generate_demo_data(ticker, days=320):
+    """Генерирует реалистичные цены через геометрическое броуновское движение"""
+    seed_prices = {
+        'AAPL': 185.0, 'MSFT': 375.0, 'GOOGL': 140.0, 'AMZN': 178.0,
+        'TSLA': 220.0, 'NFLX': 480.0, 'NVDA': 495.0, 'JPM': 195.0,
+    }
+    start_price = seed_prices.get(ticker, 100.0)
+    random.seed(hash(ticker) % 9999)
 
-# Ваши маршруты
+    prices = [start_price]
+    for _ in range(days - 1):
+        drift = 0.0003
+        vol   = 0.018
+        ret   = drift + vol * random.gauss(0, 1)
+        prices.append(round(prices[-1] * math.exp(ret), 4))
 
-ticker = 'AMZN'  # Например, Apple
-start_date = '2023-01-01'
-end_date = '2023-10-01'
+    # даты с 2024-01-01
+    start = datetime(2024, 1, 1)
+    dates = []
+    d = start
+    count = 0
+    while count < days:
+        if d.weekday() < 5:  # только рабочие дни
+            dates.append(d.strftime('%Y-%m-%d'))
+            count += 1
+        d += timedelta(days=1)
 
-# Загружаем данные о ценах акций
-data = yf.download(ticker, start=start_date, end=end_date)
-dates = data.index
-close_prices = data['Close']
+    return {'dates': dates, 'prices': prices}
+
 
 @bp.route('/')
 def home():
@@ -33,47 +58,35 @@ def logout():
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
-
     labelLogin = ''
-
     if request.method == 'POST':
-        username = request.form['username'] #получает логин
-        password = request.form['password'] #получает пароль
-        email = request.form['email']
-
-        #хэшируем пароль
+        username = request.form['username']
+        password = request.form['password']
+        email    = request.form['email']
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
-        #создаем нового пользователя с username и хэшированным паролем
-        new_user = User(username=username, password=hashed_password, email = email, user_id = 0)
-
+        new_user = User(username=username, password=hashed_password, email=email, user_id=0)
         try:
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('main.home'), 301)  
-
+            return redirect(url_for('main.home'), 301)
         except exc.IntegrityError:
             db.session.rollback()
             labelLogin = 'Этот Email уже зарегистрирован. Войдите в аккаунт'
-
-    
-    return render_template('register.html', labelLogin = labelLogin)
+    return render_template('register.html', labelLogin=labelLogin)
 
 @bp.route('/login', methods=["GET", "POST"])
 def login():
     statusLogin = ''
-
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-
-        new_user = User.query.filter_by(username = username).first()
+        new_user = User.query.filter_by(username=username).first()
         if new_user and check_password_hash(new_user.password, password):
             login_user(new_user, remember=True)
             return redirect(url_for('main.home'))
         else:
             statusLogin = 'Вы ввели неправильные данные'
-    return render_template('login.html', statusLogin = statusLogin)
+    return render_template('login.html', statusLogin=statusLogin)
 
 @bp.route('/news')
 def news():
@@ -92,54 +105,69 @@ def stocks():
 @bp.route('/plot')
 @login_required
 def plot():
-    available_stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "FB", "NFLX", "NVDA", "BRK.B", "JPM"]
-    
-    selected_ticker = request.args.get('symbol', 'AAPL')
-    
-    return render_template('plot.html', ticker=selected_ticker, stocks=available_stocks)
+    return render_template('plot.html')
 
 @bp.route('/api/stock/<ticker>')
 def stock_data(ticker):
-    # Получаем данные о ценах акций с 1 января 2024 по 9 апреля 2025
-    stock = yf.Ticker(ticker)
-    data = stock.history(start='2024-01-01', end='2025-04-09')
-    
-    # Форматируем данные для отправки на фронтенд
-    response_data = {
-        'dates': data.index.strftime('%Y-%m-%d').tolist(),
-        'prices': data['Close'].tolist()
-    }
-    return jsonify(response_data)
+    ticker = ticker.upper()
+    now = time.time()
+
+    # 1. Есть свежий кэш — отдаём сразу
+    if ticker in _stock_cache and now - _stock_cache[ticker]['ts'] < CACHE_TTL:
+        data = _stock_cache[ticker]['data']
+        data['source'] = 'cache'
+        return jsonify(data)
+
+    # 2. Пробуем yfinance
+    try:
+        stock = yf.Ticker(ticker)
+        hist  = stock.history(start='2024-01-01', end='2025-04-09')
+
+        if hist.empty:
+            raise ValueError('Пустой ответ от yfinance')
+
+        response_data = {
+            'dates':  hist.index.strftime('%Y-%m-%d').tolist(),
+            'prices': [round(float(p), 4) for p in hist['Close'].tolist()],
+            'source': 'yfinance'
+        }
+
+        # Кэшируем успешный ответ
+        _stock_cache[ticker] = {'data': response_data, 'ts': now}
+        return jsonify(response_data)
+
+    except Exception as e:
+        # 3. yfinance недоступен — смотрим устаревший кэш
+        if ticker in _stock_cache:
+            data = _stock_cache[ticker]['data'].copy()
+            data['source'] = 'stale_cache'
+            return jsonify(data)
+
+        # 4. Совсем нет данных — отдаём демо
+        demo = generate_demo_data(ticker)
+        demo['source'] = 'demo'
+        # Кэшируем демо на 10 минут — попробуем обновить позже
+        _stock_cache[ticker] = {'data': demo, 'ts': now - CACHE_TTL + 600}
+        return jsonify(demo)
+
 
 @bp.route('/api/current_point', methods=['POST'])
 def current_point():
     data = request.json
     current_index = data.get('index')
     current_price = data.get('price')
-    current_date = data.get('date')
-    
-    # Проверяем, что все данные получены
+    current_date  = data.get('date')
     if None in [current_index, current_price, current_date]:
         return jsonify({'error': 'Missing data'}), 400
-    
-    print(f"Received: index={current_index}, price={current_price}, date={current_date}")
-    
-    # Возвращаем полученные данные для проверки
-    return jsonify({
-        'status': 'success',
-        'received': {
-            'index': current_index,
-            'price': current_price,
-            'date': current_date
-        }
-    })
+    return jsonify({'status': 'success', 'received': {
+        'index': current_index, 'price': current_price, 'date': current_date
+    }})
 
 @bp.route('/api/profile', methods=['GET'])
 @login_required
 def get_profile():
-    """Получить профиль текущего пользователя"""
     return jsonify({
-        "status": "success",
+        "status":  "success",
         "profile": current_user.profile,
         "balance": current_user.balance
     })
@@ -149,34 +177,26 @@ def get_profile():
 def update_profile():
     try:
         update_data = request.get_json()
-        
         if not update_data:
             return jsonify({"status": "error", "message": "Нет данных"}), 400
-        
-        # Обновляем баланс
+
         if 'balance' in update_data:
             current_user.balance = float(update_data['balance'])
-        
-        # Обновляем профиль (2 варианта на случай разных форматов)
+
         if 'profile' in update_data:
             if isinstance(update_data['profile'], str):
                 current_user.profile = json.loads(update_data['profile'])
             else:
                 current_user.profile = update_data['profile']
-        elif ticker in update_data:
-            if not isinstance(current_user.profile, dict):
-                current_user.profile = {}
-            current_user.profile[ticker] = int(update_data[ticker])
-        
+
         db.session.commit()
-        
+
         return jsonify({
-            "status": "success",
+            "status":  "success",
             "balance": current_user.balance,
-            "profile": current_user.profile,
-            ticker: current_user.profile.get(ticker, 0)
+            "profile": current_user.profile
         })
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -187,5 +207,5 @@ def news1():
 
 @bp.route('/portfile', methods=['GET'])
 @login_required
-def portfile ():
+def portfile():
     return render_template('portfile.html')
