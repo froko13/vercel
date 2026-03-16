@@ -4,531 +4,1056 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>График акций</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Торговый терминал</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg0: #0a0c0f;
+            --bg1: #0f1217;
+            --bg2: #151920;
+            --bg3: #1c2230;
+            --border: #1e2738;
+            --border2: #2a3347;
+            --text1: #e2e8f0;
+            --text2: #94a3b8;
+            --text3: #4a5568;
+            --green: #00d084;
+            --green-dim: rgba(0,208,132,0.15);
+            --red: #ff4757;
+            --red-dim: rgba(255,71,87,0.15);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59,130,246,0.1);
+            --yellow: #f59e0b;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', sans-serif;
+        }
+
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
+            background: var(--bg0);
+            color: var(--text1);
+            font-family: var(--sans);
             height: 100vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        .container {
-            width: 100%;
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            background: var(--bg1);
+            border-bottom: 1px solid var(--border);
+            padding: 0 12px;
+            flex-shrink: 0;
+            gap: 0;
+        }
+
+        .ticker-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
             height: 100%;
-            position: relative;
-            display: flex;
-        }
-        .chart-container {
-            flex: 1;
-            background-color: #111;
-            padding: 20px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        .chart-frame {
-            border: 5px solid #333;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            flex: 1;
+            border-right: 1px solid var(--border);
             position: relative;
         }
-        .chart-title {
-            border: 5px solid #333;
-            border-radius: 12px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            background-color: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        .chart-title h1 {
-            font-size: 18px;
-            margin: 0;
-            color: #fff;
-            font-weight: normal;
-        }
-        /* Выпадающий список выбора акции */
-        .ticker-select {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 16px;
-            cursor: pointer;
-            outline: none;
-        }
-        .ticker-select:hover {
-            border-color: #66aaff;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            background-color: #111;
-            display: block;
-        }
-        .stock-controls {
-            width: 280px;
-            background-color: #222;
-            padding: 20px;
-            border-left: 1px solid #444;
-            display: flex;
-            flex-direction: column;
-        }
-        .price-info {
-            position: relative;
-        }
-        .price-display {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .price-arrow {
-            margin-left: 10px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            transition: all 0.3s;
-        }
-        .price-arrow.up {
-            border-bottom: 12px solid #4CAF50;
-        }
-        .price-arrow.down {
-            border-top: 12px solid #f44336;
-        }
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .buy-btn, .sell-btn {
-            padding: 12px;
+        .ticker-selector select {
+            background: transparent;
+            color: var(--text1);
             border: none;
-            border-radius: 4px;
-            font-weight: bold;
+            outline: none;
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
+            appearance: none;
+            padding-right: 18px;
         }
-        .buy-btn {
-            background-color: #4CAF50;
-            color: white;
+        .ticker-selector select option { background: var(--bg2); }
+        .ticker-arrow { color: var(--text3); font-size: 10px; position: absolute; right: 20px; pointer-events: none; }
+
+        .price-badge {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            padding: 0 20px;
+            border-right: 1px solid var(--border);
+            height: 100%;
         }
-        .buy-btn:hover { background-color: #45a049; }
-        .sell-btn {
-            background-color: #f44336;
-            color: white;
+        .price-badge .main-price { font-family: var(--mono); font-size: 18px; font-weight: 700; }
+        .price-badge .price-change { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+        .price-badge .price-change.up { color: var(--green); }
+        .price-badge .price-change.down { color: var(--red); }
+
+        .ohlc-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 0 20px;
+            border-right: 1px solid var(--border);
+            height: 100%;
         }
-        .sell-btn:hover { background-color: #d32f2f; }
-        .quantity-input {
-            padding: 12px;
-            width: calc(100% - 24px);
+        .ohlc-item { display: flex; flex-direction: column; gap: 1px; }
+        .ohlc-item .lbl { font-size: 9px; color: var(--text3); font-family: var(--mono); letter-spacing: .5px; }
+        .ohlc-item .val { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+        .ohlc-item .val.high { color: var(--green); }
+        .ohlc-item .val.low { color: var(--red); }
+
+        .tf-bar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 16px;
+            height: 100%;
+            border-right: 1px solid var(--border);
+        }
+        .tf-btn {
+            padding: 4px 8px;
+            border: none;
+            background: transparent;
+            color: var(--text2);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
             border-radius: 4px;
-            border: 1px solid #444;
-            background-color: #333;
-            color: white;
-            margin-bottom: 20px;
-            font-size: 16px;
+            transition: all .15s;
         }
-        .balance-container {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #444;
+        .tf-btn:hover { background: var(--bg3); color: var(--text1); }
+        .tf-btn.active { background: var(--blue-dim); color: var(--blue); }
+
+        .balance-badge {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            height: 100%;
+            border-left: 1px solid var(--border);
         }
-        .balance-label {
-            text-align: center;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #aaa;
+        .balance-badge .lbl { font-size: 11px; color: var(--text3); }
+        .balance-badge .amount { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--yellow); }
+
+        /* MAIN LAYOUT */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+        .chart-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid var(--border);
         }
-        .balance-amount {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .stocks-container {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #444;
-        }
-        .stocks-label {
-            text-align: center;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #aaa;
-        }
-        .stocks-amount {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            color: #66aaff;
-        }
-        /* Лоадер */
-        .chart-loader {
-            display: none;
+
+        .chart-wrap { flex: 1; position: relative; overflow: hidden; }
+
+        #candleCanvas { position: absolute; inset: 0; cursor: crosshair; }
+
+        .crosshair-tooltip {
             position: absolute;
-            inset: 0;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: var(--mono);
+            font-size: 11px;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+            min-width: 160px;
+        }
+        .crosshair-tooltip .ct-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 2px; }
+        .crosshair-tooltip .ct-lbl { color: var(--text3); }
+        .crosshair-tooltip .ct-val { color: var(--text1); }
+        .crosshair-tooltip .ct-val.up { color: var(--green); }
+        .crosshair-tooltip .ct-val.down { color: var(--red); }
+
+        .volume-wrap {
+            height: 70px;
+            position: relative;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        #volumeCanvas { position: absolute; inset: 0; }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg1);
+            flex-shrink: 0;
+        }
+
+        .orderbook {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            min-height: 0;
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text2);
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .ob-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 4px 14px;
+            font-size: 9px;
+            color: var(--text3);
+            font-family: var(--mono);
+            letter-spacing: .5px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .ob-cols span:nth-child(2) { text-align: center; }
+        .ob-cols span:last-child { text-align: right; }
+
+        .ob-asks, .ob-bids {
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .ob-asks { flex-direction: column-reverse; }
+
+        .ob-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 2px 14px;
+            font-family: var(--mono);
+            font-size: 11px;
+            position: relative;
+            cursor: default;
+            transition: background .1s;
+            flex-shrink: 0;
+        }
+        .ob-row:hover { background: var(--bg3); }
+        .ob-row .ob-bar {
+            position: absolute;
+            top: 0; bottom: 0; right: 0;
+            opacity: .15;
+            pointer-events: none;
+        }
+        .ob-row.ask .ob-price { color: var(--red); }
+        .ob-row.bid .ob-price { color: var(--green); }
+        .ob-row .ob-total { color: var(--text3); font-size: 10px; }
+        .ob-row .ob-size { text-align: right; }
+        .ob-row .ob-price { text-align: center; }
+
+        .ob-spread {
+            display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(17, 17, 17, 0.85);
-            z-index: 10;
-            flex-direction: column;
-            gap: 14px;
-            border-radius: 8px;
+            gap: 12px;
+            padding: 5px 14px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
-        .chart-loader.visible {
+        .ob-spread .spread-price { font-family: var(--mono); font-size: 15px; font-weight: 700; }
+        .ob-spread .spread-val { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+        /* Trade form */
+        .trade-form { padding: 14px; flex-shrink: 0; }
+
+        .trade-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+        .trade-tab {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid var(--border2);
+            background: transparent;
+            color: var(--text2);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all .15s;
+            text-align: center;
+        }
+        .trade-tab.buy.active  { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+        .trade-tab.sell.active { background: var(--red-dim);   border-color: var(--red);   color: var(--red);   }
+        .trade-tab:not(.active):hover { background: var(--bg3); }
+
+        .form-row { margin-bottom: 10px; }
+        .form-label { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-bottom: 4px; display: block; letter-spacing: .3px; }
+        .form-input {
+            width: 100%;
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 4px;
+            padding: 8px 10px;
+            color: var(--text1);
+            font-family: var(--mono);
+            font-size: 13px;
+            outline: none;
+            transition: border-color .15s;
+        }
+        .form-input:focus { border-color: var(--blue); }
+        .form-input[readonly] { color: var(--text2); }
+
+        .qty-btns { display: flex; gap: 4px; margin-top: 6px; }
+        .qty-btn {
+            flex: 1;
+            padding: 4px;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            color: var(--text2);
+            font-family: var(--mono);
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all .15s;
+        }
+        .qty-btn:hover { background: var(--border2); color: var(--text1); }
+
+        .cost-row {
             display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-top: 1px solid var(--border);
+            margin-bottom: 4px;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #333;
-            border-top-color: #66aaff;
+        .cost-row span:first-child { font-size: 11px; color: var(--text3); }
+        .cost-row span:last-child  { font-family: var(--mono); font-size: 12px; color: var(--text2); }
+
+        .exec-btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 5px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .15s;
+            letter-spacing: .5px;
+            margin-top: 8px;
+        }
+        .exec-btn.buy-exec  { background: var(--green); color: #000; }
+        .exec-btn.buy-exec:hover  { filter: brightness(1.1); }
+        .exec-btn.sell-exec { background: var(--red); color: #fff; }
+        .exec-btn.sell-exec:hover { filter: brightness(1.1); }
+
+        /* Holdings */
+        .holdings {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .holdings-title { font-size: 10px; color: var(--text3); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
+        .holdings-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .holdings-row span:first-child { font-size: 12px; color: var(--text2); }
+        .holdings-row span:last-child  { font-family: var(--mono); font-size: 12px; color: var(--text1); }
+
+        /* Loader */
+        .chart-loader {
+            position: absolute; inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10,12,15,.85);
+            z-index: 20;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chart-loader.visible { display: flex; }
+        .loader-ring {
+            width: 36px; height: 36px;
+            border: 3px solid var(--border2);
+            border-top-color: var(--blue);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin .7s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-text { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text1);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all .3s cubic-bezier(.34,1.56,.64,1);
+            z-index: 100;
+            max-width: 320px;
         }
-        .loader-text {
-            color: #66aaff;
-            font-size: 15px;
-        }
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .chart-container { height: 70%; }
-            .stock-controls {
-                width: 100%;
-                height: 30%;
-                border-left: none;
-                border-top: 1px solid #444;
-            }
-            .chart-title h1 { font-size: 16px; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast .toast-title { font-weight: 700; margin-bottom: 3px; }
+        .toast .toast-title.buy  { color: var(--green); }
+        .toast .toast-title.sell { color: var(--red); }
+        .toast .toast-title.error { color: var(--yellow); }
+
+        @media (max-width: 900px) {
+            .ohlc-bar { display: none; }
+            .right-panel { width: 240px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="chart-container">
-        <div class="chart-title">
-            <h1>График акций</h1>
-            <select class="ticker-select" id="tickerSelect">
-                <option value="AAPL">AAPL — Apple</option>
-                <option value="MSFT">MSFT — Microsoft</option>
-                <option value="GOOGL">GOOGL — Alphabet</option>
-                <option value="AMZN">AMZN — Amazon</option>
-                <option value="TSLA">TSLA — Tesla</option>
-                <option value="NFLX">NFLX — Netflix</option>
-                <option value="NVDA">NVDA — NVIDIA</option>
-                <option value="JPM">JPM — JPMorgan</option>
-            </select>
-        </div>
-        <div class="chart-frame">
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="ticker-selector">
+        <select id="tickerSelect">
+            <option value="AAPL">AAPL</option>
+            <option value="MSFT">MSFT</option>
+            <option value="GOOGL">GOOGL</option>
+            <option value="AMZN">AMZN</option>
+            <option value="TSLA">TSLA</option>
+            <option value="NFLX">NFLX</option>
+            <option value="NVDA">NVDA</option>
+            <option value="JPM">JPM</option>
+        </select>
+        <span class="ticker-arrow">▼</span>
+    </div>
+    <div class="price-badge">
+        <span class="main-price" id="mainPrice">$—</span>
+        <span class="price-change" id="priceChange">—</span>
+    </div>
+    <div class="ohlc-bar">
+        <div class="ohlc-item"><span class="lbl">OPEN</span><span class="val" id="ohlcO">—</span></div>
+        <div class="ohlc-item"><span class="lbl">HIGH</span><span class="val high" id="ohlcH">—</span></div>
+        <div class="ohlc-item"><span class="lbl">LOW</span><span class="val low" id="ohlcL">—</span></div>
+        <div class="ohlc-item"><span class="lbl">CLOSE</span><span class="val" id="ohlcC">—</span></div>
+        <div class="ohlc-item"><span class="lbl">VOL</span><span class="val" id="ohlcV">—</span></div>
+    </div>
+    <div class="tf-bar">
+        <button class="tf-btn" data-tf="1d">1Д</button>
+        <button class="tf-btn" data-tf="1w">1Н</button>
+        <button class="tf-btn" data-tf="1m">1М</button>
+        <button class="tf-btn" data-tf="3m">3М</button>
+        <button class="tf-btn" data-tf="all">ALL</button>
+    </div>
+    <div class="balance-badge">
+        <span class="lbl">БАЛАНС</span>
+        <span class="amount" id="balanceDisplay">$—</span>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+
+    <!-- CHART -->
+    <div class="chart-area">
+        <div class="chart-wrap">
+            <canvas id="candleCanvas"></canvas>
             <div class="chart-loader" id="chartLoader">
-                <div class="spinner"></div>
-                <span class="loader-text">Загрузка данных...</span>
+                <div class="loader-ring"></div>
+                <span class="loader-text">ЗАГРУЗКА ДАННЫХ...</span>
             </div>
-            <canvas id="stockChart"></canvas>
+            <div class="crosshair-tooltip" id="crosshairTooltip">
+                <div class="ct-row"><span class="ct-lbl">DATE</span><span class="ct-val" id="ct-date"></span></div>
+                <div class="ct-row"><span class="ct-lbl">OPEN</span><span class="ct-val" id="ct-o"></span></div>
+                <div class="ct-row"><span class="ct-lbl">HIGH</span><span class="ct-val up" id="ct-h"></span></div>
+                <div class="ct-row"><span class="ct-lbl">LOW</span><span class="ct-val down" id="ct-l"></span></div>
+                <div class="ct-row"><span class="ct-lbl">CLOSE</span><span class="ct-val" id="ct-c"></span></div>
+                <div class="ct-row"><span class="ct-lbl">VOL</span><span class="ct-val" id="ct-v"></span></div>
+            </div>
+        </div>
+        <div class="volume-wrap">
+            <canvas id="volumeCanvas"></canvas>
         </div>
     </div>
 
-    <div class="stock-controls">
-        <div class="price-info">
-            <div style="text-align: center; margin-bottom: 5px; font-size: 14px; color: #aaa;">Текущая цена</div>
-            <div class="price-display" id="currentPrice">
-                <span>$0.00</span>
-                <div class="price-arrow" id="priceArrow"></div>
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <div class="orderbook">
+            <div class="panel-header">
+                <span>СТАКАН</span>
+                <span id="spreadPct" style="font-family:var(--mono);font-size:10px;color:var(--text3)"></span>
             </div>
+            <div class="ob-cols"><span>ИТОГО</span><span>ЦЕНА</span><span style="text-align:right">КОЛ-ВО</span></div>
+            <div class="ob-asks" id="obAsks"></div>
+            <div class="ob-spread">
+                <span class="spread-val">СПРЕД</span>
+                <span class="spread-price" id="spreadPrice">—</span>
+                <span class="spread-val" id="spreadAmt">—</span>
+            </div>
+            <div class="ob-bids" id="obBids"></div>
         </div>
 
-        <input type="number" class="quantity-input" id="quantity" value="1" min="1" placeholder="Количество">
-
-        <div class="action-buttons">
-            <button class="buy-btn" id="buyBtn">Купить</button>
-            <button class="sell-btn" id="sellBtn">Продать</button>
+        <div class="trade-form">
+            <div class="trade-tabs">
+                <button class="trade-tab buy active" id="tabBuy">КУПИТЬ</button>
+                <button class="trade-tab sell" id="tabSell">ПРОДАТЬ</button>
+            </div>
+            <div class="form-row">
+                <label class="form-label">ЦЕНА (РЫНОЧНАЯ)</label>
+                <input class="form-input" id="formPrice" readonly value="—">
+            </div>
+            <div class="form-row">
+                <label class="form-label">КОЛ-ВО АКЦИЙ</label>
+                <input class="form-input" id="formQty" type="number" value="1" min="1">
+                <div class="qty-btns">
+                    <button class="qty-btn" data-pct="0.25">25%</button>
+                    <button class="qty-btn" data-pct="0.5">50%</button>
+                    <button class="qty-btn" data-pct="0.75">75%</button>
+                    <button class="qty-btn" data-pct="1">MAX</button>
+                </div>
+            </div>
+            <div class="cost-row"><span>Стоимость</span><span id="formCost">—</span></div>
+            <div class="cost-row" style="border-top:none;padding-top:0">
+                <span>Комиссия (3%)</span><span id="formFee">—</span>
+            </div>
+            <button class="exec-btn buy-exec" id="execBtn">КУПИТЬ AAPL</button>
         </div>
 
-        <div class="balance-container">
-            <div class="balance-label">Ваш баланс</div>
-            <div class="balance-amount" id="balanceDisplay">$0.00</div>
-        </div>
-
-        <div class="stocks-container">
-            <div class="stocks-label" id="stocksLabel">Ваши акции AAPL</div>
-            <div class="stocks-amount" id="stocksDisplay">0</div>
+        <div class="holdings">
+            <div class="holdings-title">Позиция</div>
+            <div class="holdings-row">
+                <span id="holdingsTicker">AAPL</span>
+                <span id="holdingsQty">0 акций</span>
+            </div>
+            <div class="holdings-row">
+                <span>Стоимость</span>
+                <span id="holdingsValue">$0.00</span>
+            </div>
         </div>
     </div>
 </div>
 
+<div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle"></div>
+    <div id="toastBody"></div>
+</div>
+
 <script>
-    let data_us = {
-        balance: 0,
-        profile: {}
-    };
+// ═══════════════════════════════ STATE ══════════════════════════════
+let data_us     = { balance: 0, profile: {} };
+let currentStock = sessionStorage.getItem('stock_ticker') || 'AAPL';
+let currentTF    = sessionStorage.getItem('stock_tf')     || '1w';
+let currentPrice = 0;
+let allCandles   = [];
+let visibleCandles = [];
+let animIndex    = 0;
+let animTimer    = null;
+let isBuying     = true;
 
-    let currentPrice = 0;
-    let previousPrice = 0;
-    let chart = null;
-    let animationInterval = null;
+document.getElementById('tickerSelect').value = currentStock;
 
-    // Восстанавливаем тикер из sessionStorage — чтобы не сбрасывался при переходе
-    let currentStock = sessionStorage.getItem('stock_ticker') || 'AAPL';
-    document.getElementById('tickerSelect').value = currentStock;
+// ═══════════════════════════ CANVAS SETUP ═══════════════════════════
+const candleCanvas = document.getElementById('candleCanvas');
+const volCanvas    = document.getElementById('volumeCanvas');
+const cCtx = candleCanvas.getContext('2d');
+const vCtx = volCanvas.getContext('2d');
 
-    // ─── Профиль ─────────────────────────────────────────────────────────────────
-    async function loadProfile() {
-        try {
-            const response = await fetch('/api/profile', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            });
-            if (!response.ok) throw new Error('Ошибка сети');
-            const data = await response.json();
-            if (data.status === "success") {
-                data_us = data;
-                document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-                updateStocksDisplay();
-            }
-        } catch (err) {
-            console.error('Ошибка загрузки профиля:', err);
+const PAD     = { top: 20, right: 68, bottom: 24, left: 8 };
+const VOL_PAD = { top: 6,  right: 68, bottom: 16, left: 8 };
+
+function resizeCanvases() {
+    candleCanvas.width  = candleCanvas.parentElement.clientWidth;
+    candleCanvas.height = candleCanvas.parentElement.clientHeight;
+    volCanvas.width     = volCanvas.parentElement.clientWidth;
+    volCanvas.height    = volCanvas.parentElement.clientHeight;
+    redrawAll();
+}
+
+// ════════════════════════════ DATA FETCH ════════════════════════════
+async function fetchStockData(ticker) {
+    const key = `stock_data_${ticker}`;
+    const cached = sessionStorage.getItem(key);
+    if (cached) return JSON.parse(cached);
+
+    const r = await fetch(`/api/stock/${ticker}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const raw = await r.json();
+
+    // Линейные close → реалистичный OHLCV
+    const candles = raw.dates.map((date, i) => {
+        const close = raw.prices[i];
+        const prev  = i > 0 ? raw.prices[i - 1] : close;
+        const noise = close * 0.005;
+        const open  = prev + (close - prev) * 0.1 + (Math.random() - .5) * noise;
+        const high  = Math.max(open, close) + Math.random() * noise * 2;
+        const low   = Math.min(open, close) - Math.random() * noise * 2;
+        const vol   = Math.floor(Math.random() * 50_000_000 + 10_000_000);
+        return { date, open, high, low, close, vol };
+    });
+
+    sessionStorage.setItem(key, JSON.stringify(candles));
+    return candles;
+}
+
+function aggregateCandles(candles, tf) {
+    if (tf === '1d')  return candles.slice(-30);
+    if (tf === '1w')  return candles.slice(-90);
+    if (tf === '1m')  return candles.slice(-180);
+    if (tf === '3m')  return candles.slice(-270);
+    return candles;
+}
+
+// ══════════════════════════ DRAW CANDLES ════════════════════════════
+function drawCandles(candles) {
+    const W = candleCanvas.width;
+    const H = candleCanvas.height;
+    cCtx.clearRect(0, 0, W, H);
+    if (!candles.length) return;
+
+    const chartW = W - PAD.left - PAD.right;
+    const chartH = H - PAD.top  - PAD.bottom;
+
+    const maxP  = Math.max(...candles.map(c => c.high));
+    const minP  = Math.min(...candles.map(c => c.low));
+    const range = maxP - minP || 1;
+    const padY  = range * .06;
+
+    const toY = p => PAD.top + chartH - ((p - minP + padY) / (range + padY * 2)) * chartH;
+
+    const n      = candles.length;
+    const step   = chartW / n;
+    const bodyW  = Math.max(1, Math.floor(step * 0.7));
+
+    // grid
+    cCtx.strokeStyle = 'rgba(30,39,56,0.9)';
+    cCtx.lineWidth = 1;
+    const STEPS = 6;
+    for (let i = 0; i <= STEPS; i++) {
+        const p = minP - padY + (range + padY * 2) * (i / STEPS);
+        const y = toY(p);
+        cCtx.beginPath(); cCtx.moveTo(PAD.left, y); cCtx.lineTo(W - PAD.right, y); cCtx.stroke();
+        cCtx.fillStyle = 'rgba(74,85,104,0.8)';
+        cCtx.font = '9px JetBrains Mono';
+        cCtx.textAlign = 'left';
+        cCtx.fillText('$' + p.toFixed(2), W - PAD.right + 5, y + 3.5);
+    }
+
+    // candles
+    candles.forEach((c, i) => {
+        const x    = PAD.left + i * step + step / 2;
+        const bull = c.close >= c.open;
+        const col  = bull ? '#00d084' : '#ff4757';
+
+        cCtx.strokeStyle = col;
+        cCtx.lineWidth = 1;
+        cCtx.beginPath();
+        cCtx.moveTo(x, toY(c.high));
+        cCtx.lineTo(x, toY(c.low));
+        cCtx.stroke();
+
+        const y1 = toY(Math.max(c.open, c.close));
+        const y2 = toY(Math.min(c.open, c.close));
+        const bH = Math.max(1, y2 - y1);
+        cCtx.fillStyle = col;
+        cCtx.fillRect(x - bodyW / 2, y1, bodyW, bH);
+
+        // date labels
+        const every = Math.max(1, Math.floor(n / 8));
+        if (i % every === 0) {
+            cCtx.fillStyle = 'rgba(74,85,104,0.7)';
+            cCtx.font = '9px JetBrains Mono';
+            cCtx.textAlign = 'center';
+            cCtx.fillText(c.date.slice(5), x, H - 4);
         }
+    });
+
+    // current price dashed line
+    const last = candles[candles.length - 1];
+    if (last) {
+        const y = toY(last.close);
+        cCtx.strokeStyle = 'rgba(59,130,246,0.55)';
+        cCtx.lineWidth = 1;
+        cCtx.setLineDash([4, 4]);
+        cCtx.beginPath(); cCtx.moveTo(PAD.left, y); cCtx.lineTo(W - PAD.right, y); cCtx.stroke();
+        cCtx.setLineDash([]);
+
+        cCtx.fillStyle = '#3b82f6';
+        cCtx.beginPath();
+        cCtx.roundRect(W - PAD.right + 1, y - 9, PAD.right - 2, 18, 3);
+        cCtx.fill();
+        cCtx.fillStyle = '#fff';
+        cCtx.font = 'bold 9px JetBrains Mono';
+        cCtx.textAlign = 'center';
+        cCtx.fillText('$' + last.close.toFixed(2), W - PAD.right + (PAD.right - 2) / 2 + 1, y + 3.5);
     }
 
-    function updateStocksDisplay() {
-        document.getElementById('stocksLabel').textContent = `Ваши акции ${currentStock}`;
-        document.getElementById('stocksDisplay').textContent = data_us.profile[currentStock] || 0;
-    }
+    updateTopBarFromCandle(last, candles[0]);
+}
 
-    // ─── Загрузка с кэшем в sessionStorage ───────────────────────────────────────
-    async function fetchStockData(ticker) {
-        const cacheKey = `stock_data_${ticker}`;
-        const cached = sessionStorage.getItem(cacheKey);
-        if (cached) return JSON.parse(cached);
+function drawVolume(candles) {
+    const W = volCanvas.width;
+    const H = volCanvas.height;
+    vCtx.clearRect(0, 0, W, H);
+    if (!candles.length) return;
 
-        const response = await fetch(`/api/stock/${ticker}`);
-        if (!response.ok) throw new Error(`Ошибка загрузки ${ticker}`);
-        const data = await response.json();
-        sessionStorage.setItem(cacheKey, JSON.stringify(data)); // кэшируем на сессию
-        return data;
-    }
+    const chartW = W - VOL_PAD.left - VOL_PAD.right;
+    const chartH = H - VOL_PAD.top  - VOL_PAD.bottom;
+    const maxV   = Math.max(...candles.map(c => c.vol));
+    const n      = candles.length;
+    const step   = chartW / n;
+    const barW   = Math.max(1, Math.floor(step * 0.7));
 
-    function updatePriceArrow() {
-        const arrow = document.getElementById('priceArrow');
-        const priceEl = document.getElementById('currentPrice').firstElementChild;
-        if (currentPrice > previousPrice) {
-            arrow.className = 'price-arrow up';
-            priceEl.style.color = '#4CAF50';
-        } else if (currentPrice < previousPrice) {
-            arrow.className = 'price-arrow down';
-            priceEl.style.color = '#f44336';
+    vCtx.fillStyle = 'rgba(74,85,104,0.5)';
+    vCtx.font = '9px JetBrains Mono';
+    vCtx.textAlign = 'left';
+    vCtx.fillText('VOL', W - VOL_PAD.right + 5, VOL_PAD.top + 10);
+
+    candles.forEach((c, i) => {
+        const x  = VOL_PAD.left + i * step + step / 2;
+        const bH = (c.vol / maxV) * chartH;
+        const y  = VOL_PAD.top + chartH - bH;
+        vCtx.fillStyle = c.close >= c.open ? 'rgba(0,208,132,0.4)' : 'rgba(255,71,87,0.4)';
+        vCtx.fillRect(x - barW / 2, y, barW, bH);
+    });
+}
+
+function redrawAll() {
+    drawCandles(visibleCandles);
+    drawVolume(visibleCandles);
+}
+
+// ════════════════════════════ ANIMATION ═════════════════════════════
+function startAnimation(candles, startIdx) {
+    if (animTimer) { clearInterval(animTimer); animTimer = null; }
+
+    visibleCandles = candles.slice(0, startIdx);
+    redrawAll();
+    if (visibleCandles.length) updatePriceUI(visibleCandles[visibleCandles.length - 1]);
+
+    animIndex = startIdx;
+    animTimer = setInterval(() => {
+        if (animIndex < candles.length) {
+            visibleCandles.push(candles[animIndex]);
+            currentPrice = candles[animIndex].close;
+            updatePriceUI(candles[animIndex]);
+            sessionStorage.setItem(`stock_index_${currentStock}`, animIndex);
+            redrawAll();
+            updateOrderBook();
+            animIndex++;
+        } else {
+            clearInterval(animTimer);
+            animTimer = null;
         }
+    }, 400);
+}
+
+// ══════════════════════════ CROSSHAIR ═══════════════════════════════
+candleCanvas.addEventListener('mousemove', e => {
+    if (!visibleCandles.length) return;
+    const rect   = candleCanvas.getBoundingClientRect();
+    const mx     = e.clientX - rect.left;
+    const chartW = candleCanvas.width - PAD.left - PAD.right;
+    const step   = chartW / visibleCandles.length;
+    const idx    = Math.floor((mx - PAD.left) / step);
+    if (idx < 0 || idx >= visibleCandles.length) {
+        document.getElementById('crosshairTooltip').style.display = 'none';
+        return;
+    }
+    const c  = visibleCandles[idx];
+    const tt = document.getElementById('crosshairTooltip');
+    tt.style.display = 'block';
+
+    let tx = e.clientX - rect.left + 14;
+    let ty = e.clientY - rect.top  + 14;
+    if (tx + 180 > candleCanvas.width) tx = e.clientX - rect.left - 185;
+
+    tt.style.left = tx + 'px';
+    tt.style.top  = ty + 'px';
+
+    document.getElementById('ct-date').textContent = c.date;
+    document.getElementById('ct-o').textContent    = '$' + c.open.toFixed(2);
+    document.getElementById('ct-h').textContent    = '$' + c.high.toFixed(2);
+    document.getElementById('ct-l').textContent    = '$' + c.low.toFixed(2);
+    document.getElementById('ct-c').textContent    = '$' + c.close.toFixed(2);
+    document.getElementById('ct-v').textContent    = fmtVol(c.vol);
+    document.getElementById('ct-c').className = 'ct-val ' + (c.close >= c.open ? 'up' : 'down');
+
+    document.getElementById('ohlcO').textContent = '$' + c.open.toFixed(2);
+    document.getElementById('ohlcH').textContent = '$' + c.high.toFixed(2);
+    document.getElementById('ohlcL').textContent = '$' + c.low.toFixed(2);
+    document.getElementById('ohlcC').textContent = '$' + c.close.toFixed(2);
+    document.getElementById('ohlcV').textContent = fmtVol(c.vol);
+});
+
+candleCanvas.addEventListener('mouseleave', () => {
+    document.getElementById('crosshairTooltip').style.display = 'none';
+    if (visibleCandles.length) updateTopBarFromCandle(visibleCandles[visibleCandles.length - 1], visibleCandles[0]);
+});
+
+function fmtVol(v) {
+    if (v >= 1e9) return (v / 1e9).toFixed(1) + 'B';
+    if (v >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+    if (v >= 1e3) return (v / 1e3).toFixed(1) + 'K';
+    return String(v);
+}
+
+// ═══════════════════════════ UI UPDATES ═════════════════════════════
+function updateTopBarFromCandle(last, first) {
+    if (!last) return;
+    currentPrice = last.close;
+    document.getElementById('mainPrice').textContent = '$' + last.close.toFixed(2);
+    document.getElementById('ohlcO').textContent = '$' + last.open.toFixed(2);
+    document.getElementById('ohlcH').textContent = '$' + last.high.toFixed(2);
+    document.getElementById('ohlcL').textContent = '$' + last.low.toFixed(2);
+    document.getElementById('ohlcC').textContent = '$' + last.close.toFixed(2);
+    document.getElementById('ohlcV').textContent = fmtVol(last.vol);
+    if (first) {
+        const chg = last.close - first.open;
+        const pct = (chg / first.open * 100).toFixed(2);
+        const el  = document.getElementById('priceChange');
+        el.textContent = (chg >= 0 ? '+' : '') + '$' + chg.toFixed(2) + ' (' + pct + '%)';
+        el.className   = 'price-change ' + (chg >= 0 ? 'up' : 'down');
+    }
+    updateFormCost();
+    updateHoldings();
+}
+
+function updatePriceUI(candle) {
+    document.getElementById('formPrice').value = '$' + candle.close.toFixed(2);
+    updateFormCost();
+    updateHoldings();
+}
+
+function updateFormCost() {
+    const qty  = parseInt(document.getElementById('formQty').value) || 0;
+    const cost = qty * currentPrice;
+    document.getElementById('formCost').textContent = '$' + cost.toFixed(2);
+    document.getElementById('formFee').textContent  = '$' + (cost * 0.03).toFixed(2);
+    document.getElementById('formPrice').value      = '$' + currentPrice.toFixed(2);
+}
+
+function updateHoldings() {
+    const qty = data_us.profile[currentStock] || 0;
+    document.getElementById('holdingsTicker').textContent = currentStock;
+    document.getElementById('holdingsQty').textContent    = qty + ' акций';
+    document.getElementById('holdingsValue').textContent  = '$' + (qty * currentPrice).toFixed(2);
+    document.getElementById('execBtn').textContent = (isBuying ? 'КУПИТЬ ' : 'ПРОДАТЬ ') + currentStock;
+}
+
+// ═══════════════════════════ ORDER BOOK ═════════════════════════════
+function updateOrderBook() {
+    if (!currentPrice) return;
+    const LEVELS = 8;
+    const TICK   = currentPrice * 0.0008;
+    let askTotal = 0, bidTotal = 0, maxTotal = 0;
+    const asks = [], bids = [];
+
+    for (let i = LEVELS; i >= 1; i--) {
+        const price = currentPrice + i * TICK;
+        const size  = Math.floor(Math.random() * 900 + 100);
+        askTotal += size;
+        asks.push({ price, size, total: askTotal });
+        maxTotal = Math.max(maxTotal, askTotal);
+    }
+    for (let i = 1; i <= LEVELS; i++) {
+        const price = currentPrice - i * TICK;
+        const size  = Math.floor(Math.random() * 900 + 100);
+        bidTotal += size;
+        bids.push({ price, size, total: bidTotal });
+        maxTotal = Math.max(maxTotal, bidTotal);
     }
 
-    // ─── График: строим с сохранённого индекса ────────────────────────────────────
-    async function createChart(ticker) {
-        if (animationInterval) { clearInterval(animationInterval); animationInterval = null; }
+    const spread = asks[asks.length - 1].price - bids[0].price;
+    document.getElementById('spreadPrice').textContent = '$' + currentPrice.toFixed(2);
+    document.getElementById('spreadAmt').textContent   = 'спред ' + spread.toFixed(3);
+    document.getElementById('spreadPct').textContent   = (spread / currentPrice * 100).toFixed(3) + '%';
 
-        const loader = document.getElementById('chartLoader');
-        const hasCached = !!sessionStorage.getItem(`stock_data_${ticker}`);
-        if (!hasCached) loader.classList.add('visible');
+    document.getElementById('obAsks').innerHTML = asks.map(a => `
+        <div class="ob-row ask">
+            <span class="ob-total">${a.total.toLocaleString()}</span>
+            <span class="ob-price">$${a.price.toFixed(2)}</span>
+            <span class="ob-size">${a.size.toLocaleString()}</span>
+            <div class="ob-bar" style="width:${(a.total/maxTotal*100).toFixed(1)}%;background:var(--red)"></div>
+        </div>`).join('');
 
-        let stockData;
-        try {
-            stockData = await fetchStockData(ticker);
-        } catch (err) {
-            loader.classList.remove('visible');
-            alert(`Не удалось загрузить данные для ${ticker}`);
-            return;
+    document.getElementById('obBids').innerHTML = bids.map(b => `
+        <div class="ob-row bid">
+            <span class="ob-total">${b.total.toLocaleString()}</span>
+            <span class="ob-price">$${b.price.toFixed(2)}</span>
+            <span class="ob-size">${b.size.toLocaleString()}</span>
+            <div class="ob-bar" style="width:${(b.total/maxTotal*100).toFixed(1)}%;background:var(--green)"></div>
+        </div>`).join('');
+}
+setInterval(updateOrderBook, 1500);
+
+// ════════════════════════════ PROFILE ═══════════════════════════════
+async function loadProfile() {
+    try {
+        const r = await fetch('/api/profile', { credentials: 'include' });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        if (d.status === 'success') {
+            data_us = d;
+            document.getElementById('balanceDisplay').textContent = '$' + data_us.balance.toFixed(2);
+            updateHoldings();
         }
-        loader.classList.remove('visible');
+    } catch {}
+}
 
-        // Читаем сохранённый прогресс — продолжаем с того места где остановились
-        const savedIndex = parseInt(sessionStorage.getItem(`stock_index_${ticker}`)) || 15;
-        const startIndex = Math.min(Math.max(savedIndex, 15), stockData.dates.length);
-
-        const visibleLabels = stockData.dates.slice(0, startIndex);
-        const visibleData   = stockData.prices.slice(0, startIndex);
-
-        previousPrice = visibleData[visibleData.length - 2] || 0;
-        currentPrice  = visibleData[visibleData.length - 1] || 0;
-        document.getElementById('currentPrice').firstElementChild.textContent = `$${currentPrice.toFixed(2)}`;
-        updatePriceArrow();
-
-        if (chart) chart.destroy();
-        const ctx = document.getElementById('stockChart').getContext('2d');
-
-        chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: visibleLabels,
-                datasets: [{
-                    label: `Цена акций ${ticker}`,
-                    data: visibleData,
-                    borderColor: 'rgba(102, 170, 255, 1)',
-                    backgroundColor: 'rgba(102, 170, 255, 0.2)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
-                        title: { display: true, text: 'Дата', color: 'rgba(255, 255, 255, 0.7)' }
-                    },
-                    y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
-                        title: { display: true, text: 'Цена (USD)', color: 'rgba(255, 255, 255, 0.7)' }
-                    }
-                },
-                plugins: {
-                    legend: { labels: { color: 'rgba(255, 255, 255, 0.9)', font: { size: 14 } } },
-                    tooltip: { mode: 'index', intersect: false }
-                }
-            }
+async function saveProfile() {
+    try {
+        const r = await fetch('/api/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ balance: data_us.balance, profile: data_us.profile, [currentStock]: data_us.profile[currentStock] })
         });
+        const res = await r.json();
+        if (res.status === 'success') {
+            if (res.balance) data_us.balance = res.balance;
+            if (res.profile) data_us.profile = typeof res.profile === 'string' ? JSON.parse(res.profile) : res.profile;
+            return true;
+        }
+        return false;
+    } catch { return false; }
+}
 
-        // Продолжаем анимацию с сохранённой точки
-        let index = startIndex;
-        animationInterval = setInterval(() => {
-            if (index < stockData.dates.length) {
-                chart.data.labels.push(stockData.dates[index]);
-                chart.data.datasets[0].data.push(stockData.prices[index]);
+// ══════════════════════════ LOAD CHART ══════════════════════════════
+async function loadChart(ticker, tf) {
+    const loader = document.getElementById('chartLoader');
+    if (!sessionStorage.getItem(`stock_data_${ticker}`)) loader.classList.add('visible');
+    if (animTimer) { clearInterval(animTimer); animTimer = null; }
+    try {
+        allCandles = await fetchStockData(ticker);
+    } catch {
+        loader.classList.remove('visible');
+        showToast('error', 'ОШИБКА', 'Не удалось загрузить ' + ticker);
+        return;
+    }
+    loader.classList.remove('visible');
+    const filtered = aggregateCandles(allCandles, tf);
+    const savedIdx = parseInt(sessionStorage.getItem(`stock_index_${ticker}`)) || 15;
+    startAnimation(filtered, Math.min(Math.max(savedIdx, 15), filtered.length));
+}
 
-                previousPrice = currentPrice;
-                currentPrice  = stockData.prices[index];
+// ═══════════════════════════ TOAST ══════════════════════════════════
+let toastTimer;
+function showToast(type, title, body) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastTitle').className   = 'toast-title ' + type;
+    document.getElementById('toastBody').textContent  = body;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
 
-                document.getElementById('currentPrice').firstElementChild.textContent = `$${currentPrice.toFixed(2)}`;
-                updatePriceArrow();
-                chart.update();
+// ════════════════════════════ TRADE ═════════════════════════════════
+document.getElementById('execBtn').addEventListener('click', async () => {
+    const qty = parseInt(document.getElementById('formQty').value) || 0;
+    if (qty <= 0) { showToast('error', 'ОШИБКА', 'Введите количество'); return; }
+    const commission = 0.03 * qty * currentPrice;
 
-                // Сохраняем прогресс каждый тик
-                sessionStorage.setItem(`stock_index_${ticker}`, index);
-                index++;
-            } else {
-                clearInterval(animationInterval);
-                animationInterval = null;
-            }
-        }, 700);
+    if (isBuying) {
+        const total = qty * currentPrice + commission;
+        if (total > data_us.balance) { showToast('error', 'ОШИБКА', 'Недостаточно средств'); return; }
+        data_us.balance -= total;
+        data_us.profile[currentStock] = (data_us.profile[currentStock] || 0) + qty;
+        if (await saveProfile()) {
+            showToast('buy', '▲ КУПЛЕНО', `${qty} × ${currentStock}  $${(qty*currentPrice).toFixed(2)}  (fee $${commission.toFixed(2)})`);
+        } else {
+            data_us.balance += total; data_us.profile[currentStock] -= qty;
+        }
+    } else {
+        const held = data_us.profile[currentStock] || 0;
+        if (qty > held) { showToast('error', 'ОШИБКА', `У вас только ${held} акций`); return; }
+        const total = qty * currentPrice - commission;
+        data_us.balance += total; data_us.profile[currentStock] -= qty;
+        if (await saveProfile()) {
+            showToast('sell', '▼ ПРОДАНО', `${qty} × ${currentStock}  $${(qty*currentPrice).toFixed(2)}  (fee $${commission.toFixed(2)})`);
+        } else {
+            data_us.balance -= total; data_us.profile[currentStock] += qty;
+        }
     }
 
-    // ─── Смена тикера ─────────────────────────────────────────────────────────────
-    document.getElementById('tickerSelect').addEventListener('change', function() {
-        currentStock = this.value;
+    document.getElementById('balanceDisplay').textContent = '$' + data_us.balance.toFixed(2);
+    updateHoldings();
+});
+
+// % кнопки
+document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const pct = parseFloat(btn.dataset.pct);
+        if (isBuying) {
+            const maxQ = Math.floor(data_us.balance / (currentPrice * 1.03));
+            document.getElementById('formQty').value = Math.max(1, Math.floor(maxQ * pct));
+        } else {
+            document.getElementById('formQty').value = Math.max(1, Math.floor((data_us.profile[currentStock] || 0) * pct));
+        }
+        updateFormCost();
+    });
+});
+
+document.getElementById('formQty').addEventListener('input', updateFormCost);
+
+// Вкладки buy/sell
+document.getElementById('tabBuy').addEventListener('click', () => {
+    isBuying = true;
+    document.getElementById('tabBuy').classList.add('active');
+    document.getElementById('tabSell').classList.remove('active');
+    document.getElementById('execBtn').className = 'exec-btn buy-exec';
+    updateHoldings();
+});
+document.getElementById('tabSell').addEventListener('click', () => {
+    isBuying = false;
+    document.getElementById('tabSell').classList.add('active');
+    document.getElementById('tabBuy').classList.remove('active');
+    document.getElementById('execBtn').className = 'exec-btn sell-exec';
+    updateHoldings();
+});
+
+// Смена тикера
+document.getElementById('tickerSelect').addEventListener('change', function() {
+    currentStock = this.value;
+    sessionStorage.setItem('stock_ticker', currentStock);
+    updateHoldings();
+    loadChart(currentStock, currentTF);
+});
+
+// Таймфрейм
+document.querySelectorAll('.tf-btn').forEach(btn => {
+    if (btn.dataset.tf === currentTF) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTF = btn.dataset.tf;
+        sessionStorage.setItem('stock_tf', currentTF);
+        if (animTimer) { clearInterval(animTimer); animTimer = null; }
+        startAnimation(aggregateCandles(allCandles, currentTF), 15);
+    });
+});
+
+// Сохраняем перед уходом
+window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        sessionStorage.setItem(`stock_index_${currentStock}`, animIndex);
         sessionStorage.setItem('stock_ticker', currentStock);
-        updateStocksDisplay();
-        createChart(currentStock);
-    });
-
-    // ─── Сохраняем прогресс перед уходом со страницы ─────────────────────────────
-    window.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden' && chart) {
-            sessionStorage.setItem(`stock_index_${currentStock}`, chart.data.labels.length);
-            sessionStorage.setItem('stock_ticker', currentStock);
-        }
-    });
-
-    // ─── Обновление профиля ───────────────────────────────────────────────────────
-    async function updateProfile() {
-        try {
-            const response = await fetch('/api/profile', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    balance: data_us.balance,
-                    profile: data_us.profile,
-                    [currentStock]: data_us.profile[currentStock]
-                })
-            });
-            const result = await response.json();
-            if (result.status === "success") {
-                if (result.balance) data_us.balance = result.balance;
-                if (result.profile) data_us.profile = typeof result.profile === 'string'
-                    ? JSON.parse(result.profile) : result.profile;
-                return true;
-            } else {
-                throw new Error(result.message || "Ошибка сервера");
-            }
-        } catch (error) {
-            console.error("Ошибка при обновлении:", error);
-            alert("Не удалось обновить данные. Попробуйте снова.");
-            return false;
-        }
+        sessionStorage.setItem('stock_tf', currentTF);
     }
+});
 
-    document.getElementById('buyBtn').addEventListener('click', async function() {
-        const quantity   = parseInt(document.getElementById('quantity').value);
-        const commission = 0.03 * quantity * currentPrice;
-        const totalCost  = quantity * currentPrice + commission;
+window.addEventListener('resize', resizeCanvases);
 
-        if (totalCost > data_us.balance) { alert("Недостаточно средств!"); return; }
-
-        data_us.balance -= totalCost;
-        data_us.profile[currentStock] = (data_us.profile[currentStock] || 0) + quantity;
-        document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-        updateStocksDisplay();
-
-        const success = await updateProfile();
-        if (success) {
-            alert(`Куплено ${quantity} акций ${currentStock}, комиссия $${commission.toFixed(2)}! Баланс: $${data_us.balance.toFixed(2)}`);
-        } else {
-            data_us.balance += totalCost;
-            data_us.profile[currentStock] -= quantity;
-            document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-            updateStocksDisplay();
-        }
-    });
-
-    document.getElementById('sellBtn').addEventListener('click', async function() {
-        const quantity = parseInt(document.getElementById('quantity').value);
-        if (quantity > (data_us.profile[currentStock] || 0)) { alert("У вас нет столько акций!"); return; }
-
-        const commission = 0.03 * quantity * currentPrice;
-        const totalValue = quantity * currentPrice - commission;
-        data_us.balance += totalValue;
-        data_us.profile[currentStock] -= quantity;
-        document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-        updateStocksDisplay();
-
-        const success = await updateProfile();
-        if (success) {
-            alert(`Продано ${quantity} акций ${currentStock}, комиссия $${commission.toFixed(2)}! Баланс: $${data_us.balance.toFixed(2)}`);
-        } else {
-            data_us.balance -= totalValue;
-            data_us.profile[currentStock] += quantity;
-            document.getElementById('balanceDisplay').textContent = `$${data_us.balance.toFixed(2)}`;
-            updateStocksDisplay();
-        }
-    });
-
-    // ─── Инициализация — профиль и график параллельно ────────────────────────────
-    window.onload = async () => {
-        await Promise.all([loadProfile(), createChart(currentStock)]);
-    };
+// ══════════════════════════════ INIT ════════════════════════════════
+window.onload = async () => {
+    resizeCanvases();
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.toggle('active', b.dataset.tf === currentTF));
+    await Promise.all([loadProfile(), loadChart(currentStock, currentTF)]);
+};
 </script>
-
 </body>
 {% endblock %}
