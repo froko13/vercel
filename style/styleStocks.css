@@ -1,0 +1,804 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    user-select: none;
+}
+@font-face {
+    font-family: "Alata-Regular";
+    src: url(../fonts/Alata-Regular.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Afacad";
+    src: url(../fonts/Afacad-Italic-VariableFont_wght.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Nunito-Bold";
+    src: url(../fonts/Nunito-Bold.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url(../fonts/Roboto.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Roboto Light";
+    src: url(../fonts/ofont.ru_Roboto\ Light.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url(../fonts/ofont.ru_Roboto.ttf)
+}
+@font-face {
+    font-family: "Onest";
+    src: url(../fonts/Onest-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Onest-Bold";
+    src: url(../fonts/Onest-Bold.ttf);
+}
+@font-face {
+    font-family: "Nunito-ExtraBold";
+    src: url(../fonts/Nunito-ExtraBold.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+
+.container {
+    width:100%;
+    height: 1180px; 
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    overflow-x: hidden;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+}
+
+body {
+    min-height: 100vh; 
+}
+.NavMain, section,
+.HeaderGradient1, 
+.HeaderGradient2,
+.footer {
+    width: 100%; /* Вместо 1980px */
+    left: 0;
+}
+/* Шапка */
+.NavMain     {
+    height: 100px;
+    left: -1px;
+    top: 0px;
+    position: absolute;
+    background: #222222;
+    box-shadow: 5px 5px 5px 0px rgb(0, 0, 0);
+    filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
+
+}
+
+.AccButton{
+    width: 70px;
+    height: 70px;
+    left: 1640px;
+    top: 15px;
+    position: absolute;
+    background: #86BAFF;
+    overflow: hidden;
+    border-radius: 100%;
+    border: none;
+    cursor: pointer;    
+}
+.AccButton > img{
+    margin-bottom: 3px;
+    width: 55px;
+    height: 55px;
+
+}
+.Entry {
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    left: 1726.5px;
+    top: 15px;
+    background: none ;
+    position: absolute;
+    border: none;
+}
+.EntryIcon{
+    width: 70px;
+    height: 70px;
+    left: 1740px;
+    top: 15px;
+}
+
+
+.NavNews {
+    width: 203px;
+    height: 95px;
+    left: 650px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-size: 40px;
+    font-family:"Nunito-ExtraBold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavCourses{
+    width: 203px;
+    height: 95px;
+    left: 875px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-size: 40px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavStocks {
+    width: 203px;
+    height: 95px;
+    left: 1100px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color:#50A2FF;
+    font-size: 44px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavEarn {
+    width: 269px;
+    height: 95px;
+    left: 1325px;
+    top:2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;   
+    font-size: 40px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavName {
+    width: 292px;
+    height: 100px;
+    left: 110px;
+    top: 0px;
+    position: absolute;
+    text-align: center;
+    filter: drop-shadow(-2.0px  3px 2px rgba(0, 0, 0, 0.4));
+    background: linear-gradient(140deg ,#8980F3 0% , #66A7FC 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: transparent;
+    font-size: 50px;
+    font-family: "Alata-Regular" ;
+    font-weight: 400;
+    word-wrap: break-word;
+
+}
+a {
+    text-decoration: none;
+    color: white;
+} 
+.NavStocks > a {
+    text-decoration: none;
+    color: #50A2FF;
+}
+
+.NavName > a{
+    text-decoration: none;
+    color: transparent;
+}
+
+/* верхняя частьь */
+section{
+    position: absolute;
+    top: 100px;
+    height: 1390px;
+}
+.topPanel{
+    width: 1329px;
+    height: 78px;
+    left: 20px;
+    top: 32px;
+    position: absolute;
+    border-radius: 10px;
+    position: absolute;
+    background: #3A414C;  
+}
+.RightPanel{
+    width: 504px;
+    height: 1021px;
+    left: 1394px;
+    top: 132px;
+    position: absolute;
+    border-radius: 22px;
+    position: absolute;
+    background: #3A414C;  
+}
+
+.Stripe{
+    width: 4px;
+    height: 78px;
+    top: 0px;
+    left: 310px;
+    position: absolute;
+    background: #515151;  
+}
+
+
+ul{
+    top: 147px;
+    justify-content: center;
+    list-style-type:none;
+    flex-direction: column;
+    text-align: center;
+    color: rgb(255, 255, 255);   
+    font-size: 20px;
+    font-family: "Roboto";
+    font-weight: 500;   
+}
+
+#StripeTwo{
+    width: 4px;
+    height: 78px;
+    top: 0px;
+    left: 862px;
+    position: absolute;
+    background: #515151;      
+}
+#OPEN{
+    top: 15px;    
+    left:348px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 500; 
+}
+
+#WIDTH{
+
+    top: 15px;
+    left:446px;
+    position: absolute;
+    flex-direction: column;
+}
+
+#LOW{
+    top: 15px;    
+    left:559px;
+    position: absolute;
+    flex-direction: column;
+}
+#CLOSE{
+    top: 15px;    
+    left:664px;
+    position: absolute;
+    flex-direction: column;
+}
+#VOL{
+    top: 15px;    
+    left:779px;
+    position: absolute;
+    flex-direction: column;
+}
+#Day{
+    top: 28px;     
+    left:888px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 800; 
+}
+
+#Week{
+
+    top: 28px;  
+    left:976px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 800;     
+}
+
+#Month{
+    top: 28px;  
+    left:1066px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 800;     
+}
+#ThreeMonth{
+    top: 28px;   
+    left:1159px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 800;     
+
+}
+#ALL{   
+    top: 28px;  
+    left:1251px;
+    position: absolute;
+    flex-direction: column;
+    font-weight: 800;     
+}
+
+.PanelSwitchContainer {
+    position: absolute;
+    width: 504px;
+    height: 97px;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+}
+
+.GlassPanel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    width: 504px;
+    height: 97px;    
+    top: 0;
+    left: 0;
+    padding: 120px 20px 20px; 
+    box-sizing: border-box;
+}
+
+.GlassContent {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.GlassTrigger{
+    position: absolute;
+    width:223px;
+    height: 51px;    
+    left: 252px;
+    top: 30px;        
+}
+
+
+.stocksCompany {
+    position: absolute;
+    width: 418px;
+    height: 100px;    
+    left: 43px;
+    top: 171px;   
+    border-radius: 16px;
+    background: none;   
+    border: 5px #515151 solid;    
+    font-size: 30px;
+    color: #ffffff;
+    font-family:"Roboto";
+    font-weight: 700;  
+
+}
+
+.dropdownTrigger{
+    width: 405px;
+    height: 91px;    
+    border-radius: 16px; 
+    display: flex;
+    align-items: center;
+    justify-content:center; 
+    background: none;   
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    font-size: 30px;
+    color: #ffffff;
+    font-family:"Roboto";
+    font-weight: 700;  
+}
+
+.dropdownTrigger:hover {
+    border-color: #1d5fa6;
+    box-shadow: 0 8px 12px rgba(0,123,255,0.15);
+}
+
+
+
+.DropdownMenu{
+    position: absolute;
+    user-select: none;  
+    top: 100%;
+    left: 0;
+    right: 0;
+    top: 100px;
+    margin-top: 4px;
+    border-radius: 12px;
+    background: #3A414C;
+    border: 4px #515151 solid;    
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    z-index: 1000;
+}
+
+.DropdownMenu.active {
+    max-height: 850px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.DropdownMenu li {
+    padding: 16px 16px;
+    border: 2px #515151 solid;    
+    cursor: pointer;
+    font-size: 30px;
+    color: #ffffff;
+    font-weight: 700;  
+}
+
+
+
+.DropdownMenu li:first-child {
+    border-radius: 8px 8px 0 0;
+
+}
+
+.DropdownMenu li:last-child {
+    border-radius: 0 0 8px 8px;
+}
+.hidden {
+    display: none;
+        }
+
+.PanelText{    
+    width: 223px;
+    height: 51px;
+    left: 29px;
+    top: 30px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    background: transparent;
+    border: none;
+    flex-direction: column;
+    color: rgba(80, 162, 255, 0.4);
+    font-size: 34px;
+    font-family:"Roboto";
+    font-weight: 600;
+    word-wrap: break-word;
+
+}
+.PanelText.active{    
+    color: rgb(255, 255, 255);
+}
+.PanelGlassTwo{
+    top: 0px;
+    left: 0px;
+    width: 223px;
+    height: 51px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    color: rgba(80, 162, 255, 0.4);
+    font-size: 34px;
+    font-family:"Roboto";
+    font-weight: 600;
+    word-wrap: break-word;
+}
+.PanelGlassTwo.active{
+    color: #ffffff;   
+}
+.StripeAside{
+    width: 504px;
+    height: 4px;
+    top: 99px;
+    left: 0px;
+    position: absolute;
+    background: #515151;      
+}
+
+.StripeAsideTwo{
+    width: 252px;
+    height: 8px;
+    top: 95px;
+    position: absolute;
+    background: #66A7FC;       
+}
+.StripeAsideTwo.active{
+    left: 252px; ;
+}
+/* главнная панель*/
+.NowPrice{
+    width: 212px;
+    height: 38px;
+    left: 103px;
+    top:123px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: rgba(242, 242, 242, 0.8824);   
+    font-size: 32px;
+    font-family: "Roboto";
+    font-weight: 500;
+}
+.PriseOne{
+    width: 165px;
+    height: 65px;
+    left: 136px;
+    top:165px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FF0000;   
+    font-size: 38px;
+    font-family: "Roboto";
+    font-weight: 700;        
+}        
+
+.Triangle{
+    width: 1px;
+	height: 1px;
+    position: absolute;
+    left: 280px;
+    top:183px;
+    border-radius: 1px;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+	border-top: 34px solid #ff0000;
+}
+.RightPanelButton{
+
+    position: absolute;
+    width: 365px;
+    height: 78px;
+    border-radius: 16px;
+    left: 26px;
+    top: 379px;
+    cursor: pointer;
+    background-color: #00C714;
+    border: 3.5px #28B704 solid;
+    font-family: "Roboto";
+    justify-content: center;
+    text-align: center;
+    font-size: 33px;
+    color:#ffffff;
+
+}
+#BottomButton{
+    top: 481px;
+    background-color: #C70000;
+    border: 3.5px #B70404 solid;    
+}
+.CountStock{
+    position: absolute;
+    width: 365px;
+    height: 51px;
+    border-radius: 16px;
+    left: 26px;
+    top: 267px;
+    appearance: none;
+    cursor: pointer;
+    background-color: #595959;
+    border: 3.5px #515151 solid;
+    font-family: "Roboto";
+    justify-content: center;
+    text-align: center;
+    font-size: 26px;
+    color:#ffffff;
+
+}
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; outline:none }
+.Balance{
+    width: 278px;
+    height: 24px;
+    left: 74px;
+    top:583px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: rgba(242, 242, 242, 0.8824);   
+    font-size: 32px;
+    font-family: "Roboto";
+    font-weight: 500;    
+}
+
+.Prise{
+    width: 165px;
+    height: 65px;
+    left: 130px;
+    top:617px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: rgba(242, 242, 242, 0.8824);   
+    font-size: 31px;
+    font-family: "Roboto";
+    font-weight: 700;        
+}
+.StripeBottom{
+    width: 379px;
+    height: 1.2px;
+    left: 19px;
+    top:704px;
+    position: absolute;
+    background:#7C7C7C ;
+}
+.ApplStock{
+    width: 278px;
+    height: 24px;
+    left: 70px;
+    top:732px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: rgba(242, 242, 242, 0.8824);   
+    font-size: 26px;
+    font-family: "Roboto";
+    font-weight: 700;       
+}
+.NumberStocks{
+    width: 165px;
+    height: 65px;
+    left: 126px;
+    top:765px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #4BA4F7;   
+    font-size: 38px;
+    font-family: "Roboto";
+    font-weight: 700;    
+}
+/* Стакан пнель */
+
+.HeaderGradient1 {
+    height: 1080px;
+    left: 0px;
+    top: 100px;
+    position: absolute;
+    background: linear-gradient(0deg, #1F2833 0%, rgba(34.90, 61.79, 88.23, 0.95) 19%, rgb(39 84 125 / 97%) 38%, rgb(39 83 125 / 97%) 51%, rgba(24.90, 47.79, 70.73, 0.90) 72%, rgba(17.95, 29.89, 43.36, 0.85) 86%, rgba(11, 12, 16, 0.80) 100%);
+}
+
+.HeaderGradient2 {
+    height: 1080px;
+    top: 100px;
+    position: absolute;
+    background: linear-gradient(0deg, #1f283382 0%, rgb(37 73 108 / 86%) 17%, rgba(38.80, 83.57, 125.46, 0.70) 32%, #27537dc9 51%, rgb(34 74 110 / 87%) 68%, rgba(26.35, 51.47, 75.75, 0.75) 83%, #0b0c10de 100%);
+}
+
+
+/* Футер 
+.footer {
+    height: 100px;
+    left: 0px;
+    top: 1180px;
+    position: absolute;
+    background: #222222;
+}
+
+.footerName{
+    width: 213px;
+    height: 87px;
+    left: 89px;
+    top: 1186px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #F7FCFE;
+    font-size: 24px;
+    font-family:"Roboto";
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.Terms {
+    width: 247px;
+    height: 94px;
+    left: 306px;
+    top: 1188px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #F7FCFE;
+    font-size: 18px;
+    font-family:"Roboto";
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.Privacy {
+    width: 316px;
+    height: 93.54px;
+    left: 541px;
+    top: 1186px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #F7FCFE;
+    font-size: 18px;
+    font-family: "Roboto";
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.Cookies {
+    width: 247px;
+    height: 93.73px;
+    left: 845px;
+    top: 1186px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #F7FCFE;
+    font-size: 18px;
+    font-family: "Roboto";
+    font-weight: 400;
+    word-wrap: break-word;
+}
+*/
+

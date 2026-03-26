@@ -1,0 +1,621 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    @font-face {
+        font-family: "Alata-Regular";
+        src: url(../fonts/Alata-Regular.ttf);
+        font-style: normal;
+        font-weight: normal;
+    }
+    @font-face {
+        font-family: "Afacad";
+        src: url(../fonts/Afacad-Italic-VariableFont_wght.ttf);
+        font-style: normal;
+        font-weight: normal;
+    }
+
+    @font-face {
+        font-family: "Nunito-Bold";
+        src: url(../fonts/Nunito-Bold.ttf);
+        font-style: normal;
+        font-weight: normal;
+    }
+    @font-face {
+        font-family: "Roboto";
+        src: url(../fonts/Roboto.ttf);
+        font-style: normal;
+        font-weight: normal;
+    }
+    @font-face {
+        font-family: "Roboto-Bold";
+        src: url(../fonts/ofont.ru_Roboto.ttf)
+    }
+
+
+    .container {
+        width: 1980px;
+        height: 2725px; 
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Шапка */
+    .NavMain     {
+        width: 1980px;
+        height: 100px;
+        position: absolute;
+        background: #222222;
+        box-shadow: -20px 0px 20px 0px rgba(0, 0, 0, 0.916);
+        filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
+        z-index: 99999 !important;
+    }
+
+    .AccButton{
+        width: 70px;
+        height: 70px;
+        left: 1640px;
+        top: 15px;
+        position: absolute;
+        background: #86BAFF;
+        overflow: hidden;
+        border-radius: 100%;
+        border: none;
+        cursor: pointer;
+    }
+    .AccButton > img{
+        margin-bottom: 3px;
+        width: 55px;
+        height: 55px;
+
+    }
+    .Entry {
+        cursor: pointer;
+        width: 70px;
+        height: 70px;
+        left: 1726.5px;
+        top: 15px;
+        background: none ;
+        position: absolute;
+        border: none;
+    }
+    .EntryIcon{
+        width: 70px;
+        height: 70px;
+        left: 1740px;
+        top: 15px;
+    }
+
+
+    .NavNews {
+        width: 203px;
+        height: 95px;
+        left: 650px;
+        top: 2.5px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 40px;
+        font-family:"Nunito-Bold";
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+
+    .NavCourses{
+        width: 203px;
+        height: 95px;
+        left: 875px;
+        top: 2.5px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 40px;
+        font-family: "Nunito-Bold";
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+
+    .NavStocks {
+        width: 203px;
+        height: 95px;
+        left: 1100px;
+        top: 2.5px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 40px;
+        font-family: "Nunito-Bold";
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+
+    .NavEarn {
+        width: 269px;
+        height: 95px;
+        left: 1325px;
+        top:2.5px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;   
+        font-size: 40px;
+        font-family: "Nunito-Bold";
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+
+    .NavName {
+        width: 292px;
+        height: 100px;
+        left: 110px;
+        top: 0px;
+        position: absolute;
+        text-align: center;
+        filter: drop-shadow(-2.0px  3px 2px rgba(0, 0, 0, 0.4));
+        background: linear-gradient(140deg ,#8980F3 0% , #66A7FC 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: transparent;
+        font-size: 50px;
+        font-family: "Alata-Regular" ;
+        font-weight: 400;
+        word-wrap: break-word;
+
+    }
+    a {
+        text-decoration: none;
+        color: white;
+    }
+    .NavName > a{
+
+        color: transparent;
+    }
+
+    /* верхняя частьь */
+    .HeaderGradient1 {
+        width: 1980px;
+        height: 1080px;
+        left: 0px;
+        top: 100px;
+        position: absolute;
+        background: linear-gradient(199deg, #1F2833 0%, rgba(34.90, 61.79, 88.23, 0.95) 19%, rgba(38.80, 83.57, 125.46, 0.90) 38%, rgba(38.73, 83.18, 124.78, 0.80) 51%, rgba(24.90, 47.79, 70.73, 0.90) 72%, rgba(17.95, 29.89, 43.36, 0.85) 86%, rgba(11, 12, 16, 0.80) 100%);
+    }
+
+    .HeaderGradient2 {
+        width: 1980px;
+        height: 1080px;
+        left: 0px;
+        top: 100px;
+        position: absolute;
+        background: linear-gradient(226deg, #1F2833 0%, rgba(36.97, 73.36, 108, 0.77) 17%, rgba(38.80, 83.57, 125.46, 0.70) 32%, #27537D 51%, rgba(39, 84, 125, 0.70) 68%, rgba(26.35, 51.47, 75.75, 0.75) 83%, #0B0C10 100%);
+    }
+
+    .HeaderName {
+        width: 690px;
+        height: 181px;
+        left: 651px;
+        top: 232px;
+        font-family: "Roboto";
+        position: absolute;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .NamePart {
+        background: linear-gradient(120deg , #7290FF 12% , #66A7FC 42% , #44CDFF  89%) ;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color:transparent ;
+        filter: drop-shadow(-2px 3.2px 2px rgba(0, 0, 0, 0.38));;
+        font-size: 120px;
+        font-family: "Roboto";
+        font-weight: 700;
+        letter-spacing: 3.60px;
+        word-wrap: break-word;
+        letter-spacing: 6px;
+    }
+
+
+
+    .headerBottonPart{
+        --ts:rgb(255, 255, 255);
+        --bgc:#4073a3;  
+        width: 298px;
+        height: 112px;
+        left: 841.28px;
+        top: 2470px;
+        border-radius: 65px ;
+        background: linear-gradient(313deg, #43719D 0%, #1C2F41 100%);
+
+        cursor: pointer;
+        border: none;
+        font-family: "Nunito-Bold";
+        justify-content: center;
+        text-align: center;
+        font-size: 38px;
+        color: var(--ts);
+        box-shadow: 0 0 10px .35px #225E97 ;
+        transition: all 0.4s;
+        &:hover{
+            color:var(--ts);
+            font-size: 42px;
+            border-radius: 55px ;
+            background-color:var(--bgc);
+            box-shadow: 0 0 10px .5px var(--bgc),
+                0 0 5px 2px var(--bgc),
+                inset 0 0 .20px .5px var(--bgc)
+        }
+    }
+    .HeraderButton {
+        width: 277px;
+        height: 111.16px;
+        left: 851.08px;
+        top: 702.98px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 36px;
+        font-family: Nunito;
+        font-weight: 800;
+        word-wrap: break-word;
+    }
+
+    .HeaderText {
+        width: 892px;
+        height: 165.98px;
+        left: 544px;
+        top: 477px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .HeaderTextLight {
+        color: #E1E3E4;
+        font-size: 42px;
+        font-family: "Roboto";
+        font-weight: 560;
+        letter-spacing: 1px;
+        word-wrap: break-word;
+    }
+
+
+
+    .HeaderTextAccent {
+        color: #28D6FF;
+        font-size: 64px;
+        font-family: "Roboto-Bold";
+        font-weight: 700;
+        letter-spacing: 3.20px;
+        word-wrap: break-word;
+    }
+
+
+    /* Основной контент */
+
+    .main-content {
+        width: 1980px;
+        height: 1146px;
+        left: 0px;
+        top: 1178px;
+        position: absolute;
+        background: linear-gradient(176deg, #0B223E 0%, #27547D 100%);
+        backdrop-filter: blur(2px);
+    }
+
+    .Card{
+        width: 498.54px;
+        height: 738.22px;
+        border-radius: 72px;
+        position: absolute;
+        background: linear-gradient(180deg, #456398 0% ,#000000 100%);
+
+    }
+
+    #CardCaurse{
+        left: 624.96px;
+        top: 203.89px;
+    }
+    #CardStocks{
+        left: 450px;
+        top: 203.89px;
+    }
+    #CardNew{
+        right:1500.04px;
+        top: 203.89px;
+    }
+    #CardEarn{
+        left:-488.04px;
+        top: 203.89px;
+
+    }
+
+    .CardText{
+        width:445.81px;
+        height: 326.26px;
+        left: 26.37px;
+        top:  355.93px;
+        position: absolute;
+        font-family: "Roboto";
+        text-align: center;
+        font-size: 36px ;
+        font-weight: 540;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .imgCardCourses{
+        width: 390.68px;
+        height: 390.68px;
+        left: 53.93px;
+        top: 0px;
+        cursor: pointer;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+    .imgCardStocks{
+        width: 272.22px;
+        height: 272.22px;
+        left: 111.45px;
+        top: 46.74px;
+        cursor: pointer;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .imgCardNew{
+        width:297.81px;
+        height: 297.81px;
+        left: 98.427px;
+        top: 34.75px;
+        cursor: pointer;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+    .imgCardEarn{
+        width:298.28px;
+        height: 280.54px;
+        left: 98.27px;
+        top: 43.14px;
+        cursor: pointer;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .main-content {
+        width: 1980px;
+        height: 1146px;
+        left: 0px;
+        top: 1178px;
+        position: absolute;
+        background: linear-gradient(176deg, #0B223E 0%, #27547D 100%);
+    }
+
+            /* Карусель - БЕЗ РАМКИ */
+            .carousel-container {
+
+                padding: 0;
+                width: auto; /* Ширина под все карточки */
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                cursor: grab;
+                overflow: visible; /* Все карточки видны */
+            }
+            
+
+            .carousel-track {
+                position: relative;
+                display: flex;
+                /* УБРАЛИ overflow: hidden - теперь все карточки видны */
+            }
+
+            .carousel-slide {
+
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20px;
+                /* УБРАЛИ opacity изменения - все карточки одинаково видны */
+            }
+
+            /* ФОН */
+
+            /* Стили карточек */
+
+            .carousel-card:hover {
+                z-index: 10;
+            }
+
+            .Card {
+                width: 498.54px;
+                height: 738.22px;
+                border-radius: 72px;
+                position: absolute;
+                background: linear-gradient(180deg, #456398 0% ,#000000 100%);
+                position: relative;
+                overflow: hidden;
+            
+            }
+
+
+    /* Футер */
+    .footer {
+        width: 1979.92px;
+        height: 401px;
+        left: 0px;
+        top: 2324px;
+        position: absolute;
+        background: #222222;
+    }
+
+    .footerName{
+        width: 213px;
+        height: 86.73px;
+        left: 89px;
+        top: 2631px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: #F7FCFE;
+        font-size: 24px;
+        font-family:"Roboto";
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+
+    .Terms {
+        width: 247px;
+        height: 93.54px;
+        left: 306px;
+        top: 2631.49px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: #F7FCFE;
+        font-size: 18px;
+        font-family:"Roboto";
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+
+    .Privacy {
+        width: 316px;
+        height: 93.54px;
+        left: 541px;
+        top: 2631.49px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: #F7FCFE;
+        font-size: 18px;
+        font-family: "Roboto";
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+
+    .Cookies {
+        width: 247px;
+        height: 93.73px;
+        left: 845px;
+        top: 2631px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: #F7FCFE;
+        font-size: 18px;
+        font-family: "Roboto";
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+
+    .footerText {
+        width: 922px;
+        height: 128.20px;
+        left: 529px;
+        top: 2324px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: #E9E9E9;
+        font-size: 45px;
+        font-family: "Nunito-Bold";
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+
+    .Line{
+        width: 1980.10px;
+        height: 4.65px;
+        left: 0px;
+        top: 2620.01px;
+        position: absolute;
+        background: #D9D9D9;
+    }
+
+
+        
+
+    .footerButton {
+        width: 305px;
+        height: 115.41px;
+        left: 837px;
+        top: 2467px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        justify-content: center;
+        color: rgba(246.83, 246.83, 246.83, 0.88);
+        font-size: 38px;
+        font-family: Nunito;
+        font-weight: 680;
+        word-wrap: break-word;
+    }
+    .footerButtonPart{
+        --ts:rgb(255, 255, 255);
+        --bgc:#264b6d;
+        width: 296.44px;
+        height: 112px;
+        left: 841.28px;
+        top: 2470px;
+        border-radius: 65px ;
+        background: linear-gradient(0deg, #314B64 12.3%, #225E97 83%);
+        word-wrap: break-word;
+        cursor: pointer;
+        border: none;
+        font-family: "Nunito-Bold";
+        justify-content: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 38px;
+        color: var(--ts);
+        box-shadow: 0 0 10px .35px #163e63 ;
+        transition: all 0.4s;
+        &:hover{
+            color:var(--ts);
+            font-size: 42px;
+            border-radius: 55px ;
+            background-color:var(--bgc);
+            box-shadow: 0 0 10px .5px var(--bgc),
+                0 0 5px 2px var(--bgc),
+                inset 0 0 .20px .5px var(--bgc)
+        }
+    }

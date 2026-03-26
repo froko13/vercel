@@ -1,0 +1,351 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+@font-face {
+    font-family: "Alata-Regular";
+    src: url(../fonts/Alata-Regular.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Afacad";
+    src: url(../fonts/Afacad-Italic-VariableFont_wght.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Nunito-Bold";
+    src: url(../fonts/Nunito-Bold.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url(../fonts/Roboto.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url(../fonts/ofont.ru_Roboto.ttf)
+}
+
+@font-face {
+    font-family: "Onest";
+    src: url(../fonts/Onest-Regular.ttf);
+}
+
+.container {
+    width: 1980px;
+    height: 1180px; 
+    position: relative;
+    overflow: hidden;
+}
+
+/* Шапка */
+.NavMain     {
+    width: 1980px;
+    height: 100px;
+    left: -1px;
+    top: 0px;
+    position: absolute;
+    background: #222222;
+    box-shadow: 5px 5px 5px 0px rgb(0, 0, 0);
+    filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
+}
+
+.AccButton{
+    width: 70px;
+    height: 70px;
+    left: 1640px;
+    top: 15px;
+    position: absolute;
+    background: #86BAFF;
+    overflow: hidden;
+    border-radius: 100%;
+    border: none;
+    cursor: pointer;
+}
+.AccButton > img{
+    margin-bottom: 3px;
+    width: 55px;
+    height: 55px;
+
+}
+.Entry {
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    left: 1726.5px;
+    top: 15px;
+    background: none ;
+    position: absolute;
+    border: none;
+}
+.EntryIcon{
+    width: 70px;
+    height: 70px;
+    left: 1740px;
+    top: 15px;
+}
+
+
+.NavNews {
+    width: 203px;
+    height: 95px;
+    left: 650px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 40px;
+    font-family:"Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavCourses{
+    width: 203px;
+    height: 95px;
+    left: 875px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 40px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavStocks {
+    width: 203px;
+    height: 95px;
+    left: 1100px;
+    top: 2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 40px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavEarn {
+    width: 269px;
+    height: 95px;
+    left: 1325px;
+    top:2.5px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;   
+    font-size: 40px;
+    font-family: "Nunito-Bold";
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.NavName {
+    width: 292px;
+    height: 100px;
+    left: 110px;
+    top: 0px;
+    position: absolute;
+    text-align: center;
+    filter: drop-shadow(-2.0px  3px 2px rgba(0, 0, 0, 0.4));
+    background: linear-gradient(140deg ,#8980F3 0% , #66A7FC 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: transparent;
+    font-size: 50px;
+    font-family: "Alata-Regular" ;
+    font-weight: 400;
+    word-wrap: break-word;
+
+}
+a {
+    text-decoration: none;
+    color: transparent;
+}
+.NavName > a {
+    text-decoration: none;
+    color: transparent;
+}
+a {
+    text-decoration: none;
+    color: white;
+}
+
+/* верхняя частьь */
+.HeaderGradient1 {
+    width: 1980px;
+    height: 1080px;
+    left: 0px;
+    top: 100px;
+    position: absolute;
+    background: linear-gradient(199deg, #1F2833 0%, rgba(34.90, 61.79, 88.23, 0.95) 19%, rgba(38.80, 83.57, 125.46, 0.90) 38%, rgba(38.73, 83.18, 124.78, 0.80) 51%, rgba(24.90, 47.79, 70.73, 0.90) 72%, rgba(17.95, 29.89, 43.36, 0.85) 86%, rgba(11, 12, 16, 0.80) 100%);
+}
+
+.HeaderGradient2 {
+    width: 1980px;
+    height: 1080px;
+    left: 0px;
+    top: 100px;
+    position: absolute;
+    background: linear-gradient(226deg, #1F2833 0%, rgba(36.97, 73.36, 108, 0.77) 17%, rgba(38.80, 83.57, 125.46, 0.70) 32%, #27537D 51%, rgba(39, 84, 125, 0.70) 68%, rgba(26.35, 51.47, 75.75, 0.75) 83%, #0B0C10 100%);
+}
+
+.Registration{
+    width: 592px;
+    height: 434px;
+    left: 694px;
+    top: 424px;   
+    border-radius: 50px;
+    position: absolute;
+    background:linear-gradient(185deg, #305374 0% , #5D7899 100%);
+    box-shadow: -4px 3px 5px 0px rgba(0, 0, 0, 0.251);
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.253));
+    
+}
+
+.RegForm{
+    width: 161px;
+    height: 29px;
+    left: 282px;
+    top: 26px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #3F3F3F ;
+    font-size: 25px;
+    font-family:"Nunito-Bold";
+    font-weight: 700px;
+    word-wrap: break-word;
+}
+
+
+.EntryForm{
+    width: 64px;
+    height: 29px;
+    left: 148px;
+    top: 26px;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 25px;
+    font-family:"Nunito-Bold";
+    font-weight: 700px;
+    word-wrap: break-word;
+}
+
+.LabelOne{
+    width: 360px;
+    height: 20px;
+    left: 116px;
+    top: 106px;
+    position: absolute;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 15px;
+    font-family:"Onest";
+
+}
+.LabelTwo{
+    width: 360px;
+    height: 20px;
+    left: 116px;
+    top: 203px;
+    position: absolute;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 15px;
+    font-family:"Onest";
+}
+
+.TelNumber{
+    width: 360px;
+    height: 44px;
+    left: 116px;
+    top: 132px;
+    position: absolute;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background-color: #F4F4F4;
+    border: none;
+    padding-left: 40px;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+input:focus {
+    outline: none;
+}
+
+.Password{
+    width: 360px;
+    height: 44px;
+    left: 116px;
+    top: 229px;
+    position: absolute;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background-color: #F4F4F4;
+    border: none;
+    padding-left: 40px;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.FormButton{
+    width: 316px;
+    height: 70px;
+    left: 138px;
+    top: 313px;
+    position: absolute; 
+    border-radius: 26px ;
+    background: #27537D;
+    word-wrap: break-word;
+    cursor: pointer;
+    border: none;
+    font-family: "Roboto";
+    color: white;
+    justify-content: center;
+    text-align: center;
+    font-size: 24px;  
+}
+
+.Swap{
+    text-decoration: none;
+    color: #3F3F3F;
+}
