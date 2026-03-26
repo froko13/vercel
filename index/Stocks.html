@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthWise</title>
+    <link rel="stylesheet" href="../style/styleStocks.css">
+    <script src="../script/scriptStock.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            
+            <ul class="NavMain">  
+                <li class="NavName"><a href="Main.html">WealthWise</a></li>
+                <li class="NavEntry"> 
+                    <button class="Entry">  
+                        <img class="EntryIcon" src="../IMG/auntification.png" alt="icon" />
+                    </button>
+                </li>
+                <li class="NavAvatar">
+                    <button class="AccButton">
+                        <img src="../IMG/Avatar.png" alt="">
+                    </button>   
+                </li>
+                <li class="NavNews"><a href="News.html">Новости</a></li>
+                <li class="NavCourses"><a href="Courses.html">Курсы</a></li>
+                <li class="NavStocks"><a href="Stocks.html">Акции</a></li>
+                <li class="NavEarn"><a href="../index/Bag.html">Портфель</a></li>
+            </ul>
+        </nav>
+        <main>
+            <div class="HeaderGradient1"></div>
+            <div class="HeaderGradient2"></div>        
+            <section>
+                <div class="topPanel">
+                    <div class="Stripe"></div>
+                    <ul>
+                        <li class="metric" id="OPEN">OPEN</li>
+                        <li class="metric" id="WIDTH">WIDTH</li>
+                        <li class="metric" id="LOW">LOW</li>
+                        <li class="metric" id="CLOSE">CLOSE</li>
+                        <li class="metric" id="VOL">VOL</li>
+                    </ul>
+                    <div class="Stripe" id="StripeTwo"></div>
+                    <ul>
+                        <li class="Dates" id="Day">1Д</li>
+                        <li class="Dates" id="Week">1Н</li>
+                        <li class="Dates" id="Month">1М</li>
+                        <li class="Dates" id="ThreeMonth">3М</li>
+                        <li class="Dates" id="ALL">ALL</li>
+                    </ul>
+                </div>
+            </section>
+            <aside>
+                <div class="RightPanel">
+                    <div class="PanelSwitchContainer">
+                        <button class="PanelText active" onclick="switchPanel('stocksCompany')">Торговля</button>
+                        <div class="GlassTrigger">
+                            <button class="PanelGlassTwo" onclick="switchPanel('GlassPanel')">Стакан</button>
+                        </div>
+                        <div class="StripeAside"></div>
+                        <div class="StripeAsideTwo"></div>
+                    </div>
+
+                    <div class="stocksCompany active-panel" id="stocksCompany">
+                        <div class="dropdownTrigger">
+                            <span>AAPL</span>
+                        </div>
+                        <ul class="DropdownMenu">
+                            <li>AAPL</li>    
+                            <li>MSFT</li>
+                            <li>GOOGL</li>
+                            <li>AMZN</li>
+                            <li>TSLA</li>
+                            <li>FB</li>
+                            <li>NFLX</li>
+                            <li>NVDA</li>                            
+                        </ul> 
+                        <p class="NowPrice">Текущая цена</p>
+                        <p class="PriseOne">$194.3</p>
+                        <div class="Triangle" ></div>
+                        <form action="../index/Stocks.html" method="post">
+                            <input class="CountStock" min="0" type="number"  id="CountStock" name="CountStock" placeholder="Количество акций" required><br>
+                            <button class="RightPanelButton">Купить</button>
+                            <button class="RightPanelButton" id="BottomButton">Продать</button>
+                        </form>
+                        <p class="Balance">Ваш баланс</p>
+                        <p class="Prise">$1000</p>
+                        <div class="StripeBottom"></div>
+                        <p class="ApplStock">Ваши акции AAPL</p>
+                        <p class="NumberStocks">4</p>                        
+                    </div>
+
+                    <!--ГЛАСС -->
+                    <div class="GlassPanel hidden" id="GlassPanel">
+                        <div class="GlassContent">
+                            <div class="OrdersTable">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main> 
+                
+        <footer>
+            <div class="footer"></div>
+            <div class="footerName">WealthWise 2026</div>
+            <div class="Terms">Условия использования</div>
+            <div class="Privacy">Политика конфиденциальности</div>
+            <div class="Cookies">Управление cookies</div>
+        </footer>
+    </div>
+</body>
+</html>

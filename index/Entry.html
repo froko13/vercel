@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthWise</title>
+    <link rel="stylesheet" href="../style/styleE.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <!-- Шапка (nav) -->
+        <nav>
+            <ul class="NavMain"> 
+                <li class="NavName"><a href="Main.html">WealthWise</a></li>
+                <li class="NavEntry">  
+                    <button class="Entry">  
+                        <img class="EntryIcon" src="../IMG/auntification.png" alt="icon" />
+                    </button>
+                </li>
+                <li class="NavAvatar">
+                    <button class="AccButton">
+                        <img src="../IMG/Avatar.png" alt="">
+                    </button>   
+                </li>
+                <li class="NavNews"><a href="News.html">Новости</a></li>
+                <li class="NavCourses"><a href="Courses.html">Курсы</a></li>
+                <li class="NavStocks"><a href="Stocks.html">Акции</a></li>
+                <li class="NavEarn"><a href="../index/Bag.html">Портфель</a></li>
+            </ul>
+        </nav>
+        <Main>
+                    <!-- main 1 секция -->
+            <div class="HeaderGradient1"></div>
+            <div class="HeaderGradient2"></div>
+            <div class="Registration">
+                <ul>
+                    <li class="EntryForm">Вход</li>
+                    <li class="RegForm"><a class="Swap" href="../index/Registration.html">Регистрация</a></li>
+                    <!--<form action="../Form/main.py" method="post">-->
+                    <form action="../index/News.html" method="post">
+                        <label class="LabelOne" for="Tel">Номер телефона</label><br>
+                        <input class="TelNumber" pattern="\d*" type="tel" id="Tel" name="TelNumber" placeholder="8 (___) ___-__-__"  required><br>
+                        <label class="LabelTwo" for="Password" >Пароль</label><br>
+                        <input class="Password" type="password" id="Password" name="Pass" required><br>
+                        <a href="../index/News.html"><button class="FormButton" type="submit">Войти</button></a>
+                    </form>
+                </ul>
+            </div>
+        </Main>
+    </div>
+</body>
+</html>

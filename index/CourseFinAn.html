@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthWise — Курс 3</title>
+    <link rel="stylesheet" href="../style/CourseFinAn.css">
+    <script src="../script/scriptCourse.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- НАВИГАЦИЯ (остается без изменений) -->
+        <nav>
+            <ul class="NavMain">  
+                <li class="NavName"><a href="Main.html">WealthWise</a></li>
+                <li class="NavEntry">  
+                    <button class="Entry">  
+                        <img class="EntryIcon" src="../IMG/auntification.png" alt="icon" />
+                    </button>
+                </li>
+                <li class="NavAvatar">
+                    <button class="AccButton">
+                        <img src="../IMG/Avatar.png" alt="">
+                    </button>   
+                </li>
+                <li class="NavNews"><a href="News.html">Новости</a></li>
+                <li class="NavCourses"><a href="Courses.html">Курсы</a></li>
+                <li class="NavStocks"><a href="Stocks.html">Акции</a></li>
+                <li class="NavEarn"><a href="../index/Bag.html">Портфель</a></li>
+            </ul>
+        </nav>
+
+        <header>
+            <div class="HeaderGradient1"></div>
+            <div class="HeaderGradient2"></div>
+            
+            <div class="CourseBodyGrad">
+                <div class="CourseTitle">
+                    <h1>Курс 3. Портфель пользователя на рынке акций</h1>
+                </div>
+
+
+                <div class="CourseModules">
+
+                    <div class="Module" id="module1">
+                        <h2 class="ModuleTitle">Модуль 1. Определение инвестиционного профиля</h2>
+                        <div class="ModuleContent">
+                            <p>Прежде чем покупать что-либо, ответьте на три вопроса:</p>
+                            <ul>
+                                <li>Какой у меня горизонт инвестирования? (до 3 лет, 3–10 лет, более 10 лет)</li>
+                                <li>Какую максимальную просадку я готов(а) пережить без паники? (5%, 15%, 30% и более)</li>
+                                <li>Какова моя цель? (сохранение капитала, регулярный доход, агрессивный рост)</li>
+                            </ul>
+                            <p><strong>На основе ответов определяется риск-профиль:</strong></p>
+                            <ul>
+                                <li><strong>Консервативный</strong> — горизонт до 3 лет, допустимая просадка меньше 10%. Основа: облигации, фонды ликвидности, возможно небольшая доля дивидендных акций.</li>
+                                <li><strong>Умеренный</strong> — горизонт 3–10 лет, просадка до 20–25%. Акции + облигации в разных пропорциях.</li>
+                                <li><strong>Агрессивный</strong> — горизонт больше 10 лет, просадка до 40% и выше. Доля акций 70–100%, в том числе растущие компании и развивающиеся рынки.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="Module" id="module2">
+                        <h2 class="ModuleTitle">Модуль 2. Принципы сборки портфеля</h2>
+                        <div class="ModuleContent">
+                            <p><strong>Ядро портфеля</strong> — 60–80% капитала размещаются в надёжные, ликвидные активы:</p>
+                            <ul>
+                                <li>широкие рыночные ETF (S&P 500, индекс Мосбиржи)</li>
+                                <li>акции «голубых фишек»</li>
+                                <li>государственные облигации</li>
+                            </ul>
+                            <p><strong>Спутники</strong> — до 20–30% капитала можно направить в более рискованные, но потенциально доходные идеи:</p>
+                            <ul>
+                                <li>акции второго эшелона</li>
+                                <li>отраслевые ETF</li>
+                                <li>тематические инвестиции (искусственный интеллект, возобновляемая энергетика)</li>
+                            </ul>
+                            <p><strong>Диверсификация:</strong></p>
+                            <ul>
+                                <li>по секторам — не более 25–30% портфеля в одном секторе</li>
+                                <li>валютная — добавление иностранных активов снижает валютный риск</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="Module" id="module3">
+                        <h2 class="ModuleTitle">Модуль 3. Ребалансировка: зачем и как</h2>
+                        <div class="ModuleContent">
+                            <p>Со временем веса активов в портфеле меняются. <strong>Цель ребалансировки</strong> — вернуть портфель к целевой структуре.</p>
+                            <p><strong>Способы:</strong></p>
+                            <ul>
+                                <li><strong>Календарная</strong> — раз в квартал, полгода или год</li>
+                                <li><strong>По отклонению</strong> — если доля актива вышла за пределы >10%</li>
+                                <li><strong>Через денежные потоки</strong> — новые взносы в отстающие активы</li>
+                            </ul>
+                            <p><strong>Результат:</strong> фиксировать прибыль и покупать недооценённые активы.</p>
+                        </div>
+                    </div>
+
+                    <div class="Module" id="module4">
+                        <h2 class="ModuleTitle">Модуль 4. Оценка эффективности портфеля</h2>
+                        <div class="ModuleContent">
+                            <p><strong>Сравнивайте с бенчмарком:</strong> индекс Мосбиржи (Россия), S&P 500 (США).</p>
+                            <p><strong>Ключевые метрики:</strong></p>
+                            <ul>
+                                <li><strong>Абсолютная доходность</strong> — прирост капитала</li>
+                                <li><strong>Относительная доходность</strong> — обгон/отставание от индекса</li>
+                                <li><strong>Коэффициент Шарпа</strong> — доходность на единицу риска</li>
+                                <li><strong>Максимальная просадка</strong> — наибольшее падение от пика</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="Module" id="module5">
+                        <h2 class="ModuleTitle">Модуль 5. Налоговая оптимизация</h2>
+                        <div class="ModuleContent">
+                            <p><strong>Налог:</strong> 13% (15% при доходе >5 млн руб.)</p>
+                            <p><strong>Способы снижения:</strong></p>
+                            <ul>
+                                <li><strong>ИИС Тип А:</strong> возврат 13% от внесённой суммы (до 400 тыс. руб.)</li>
+                                <li><strong>ИИС Тип Б:</strong> освобождение от налога на прибыль (3+ года)</li>
+                                <li><strong>Зачет убытков:</strong> прошлые убытки против текущей прибыли</li>
+                                <li><strong>Долгосрочное владение:</strong> >3 лет = освобождение от НДФЛ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="Module" id="module6">
+                        <h2 class="ModuleTitle">Модуль 6. Психология управления портфелем</h2>
+                        <div class="ModuleContent">
+                            <p><strong>Основные ошибки:</strong></p>
+                            <ul>
+                                <li>Чрезмерная торговля → рост комиссий</li>
+                                <li>Охота за дивидендами → падение цены</li>
+                                <li>Игнорирование ребалансировки → неконтролируемый риск</li>
+                                <li>Следование за толпой → покупка на максимумах</li>
+                            </ul>
+                            <p><strong>Чек-лист:</strong></p>
+                            <ul>
+                                <li>Запланируйте ребалансировку в календаре</li>
+                                <li>Раз в месяц проверяйте структуру (без эмоций)</li>
+                                <li>Имейте «подушку безопасности» наличными</li>
+                                <li><em>Зарабатывайте на времени на рынке</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>                 
+        </header>
+
+        <footer>
+
+</body>
+</html>
